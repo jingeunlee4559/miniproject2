@@ -1,0 +1,77 @@
+
+/* 네비게이션 링크 스타일 */
+.navlinkmy {
+    position: relative;
+    padding-bottom: 0.5rem; /* 링크 하단의 패딩 */
+    color: black;
+    overflow: hidden; /* 글자를 넘어가는 부분 숨기기 */
+}
+
+.custom-snavbarmy {
+    background-color:#6DD2FF; /* 원하는 배경색으로 변경하세요 */
+    color: black;
+    border-radius: 25px;
+}
+
+.navlinkmy:hover {
+    color: black; /* 호버 시 노란색으로 변경 */
+}
+
+
+
+/* 하이라이트 바 기본 스타일 */
+.nav-item .navlinkmy::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0; /* 초기 상태에서 너비를 0으로 설정 */
+    height: 3px; /* 바의 높이 */
+    background-color: transparent; /* 바의 색상을 투명으로 설정 */
+    transition: width 0.3s ease, background-color 0.3s ease; /* 너비와 색상 변경시의 전환 효과 */
+    transform: translateX(-50%); /* 중앙 정렬을 위한 변환 */
+}
+
+.navlinkmy::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; /* 초기 상태에서 너비를 0으로 설정 */
+    height: 3px; /* 바의 높이 */
+    background-color: transparent; /* 바의 색상을 투명으로 설정 */
+    transition: width 0.3s ease, background-color 0.3s ease; /* 너비와 색상 변경시의 전환 효과 */
+}
+
+.navlinkmy:hover::after {
+    width: 100%; /* 너비를 100%로 확장하여 하이라이트 바 표시 */
+    background-color: black; /* 하이라이트 바의 색상을 흰색으로 변경 */
+    color: black;
+}
+
+/* 프로필 이미지 스타일 */
+.navbar-logo {
+    width: 30px; /* 너비를 30px로 설정 */
+    height: 30px; /* 높이를 30px로 설정 */
+    object-fit: cover; /* 이미지 비율 유지를 위해 커버 설정 */
+    filter: brightness(200%); /* 이미지의 밝기를 200%로 설정하여 밝게 표시 */
+}
+
+/* .navbar-nav{
+    --bs-nav-link-hover-color : white;
+} */
+
+/* 부트스트랩 반응형 미디어 쿼리에 따른 스타일 */
+@media (max-width: 991px) {
+    .navbar-nav .nav-link::after {
+        display: none; /* 모바일 뷰에서 하이라이트 바 숨김 */
+    }
+    .navbar-toggler {
+        text-align: center; /* 토글러 텍스트 가운데 정렬 */
+    }
+    .dropdown-menu {
+        text-align: center; /* 드롭다운 메뉴 아이템 가운데 정렬 */
+    }
+}

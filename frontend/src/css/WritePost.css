@@ -1,0 +1,28 @@
+.image-upload-boxs.uploaded {
+    background-color: #98f2a3;
+    border-color: #6DD2FF; 
+ }
+
+  .image-upload-boxs {
+    border: 2px dashed #6DD2FF;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+    cursor: pointer;
+  }
+
+  .custom-file-uploads {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: black;
+    border-color: #6DD2FF;
+  }
+  
+
+  input[type="file"] {
+    display: none;
+  }
+

@@ -1,0 +1,187 @@
+html, body {
+  overflow-x: hidden; 
+}
+
+/* 텍스트 스타일 */
+.t2 {
+  text-align: left;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* 버튼 스타일 */
+.mt2btn {
+  float: right; /* 오른쪽으로 플로팅 */
+  margin-right: 0; /* 오른쪽 여백 없음 */
+  border: none; /* 테두리 제거 */
+  max-width: 115px;
+  background-color: #6DD2FF;
+  border-radius: 45px;
+  color: black;
+  --bs-btn-active-bg: #6DD2FF;
+  --bs-btn-active-color: black;
+  --bs-btn-hover-color: black;
+  margin-top: 2rem; /* 버튼 상단 여백 */
+}
+
+/* 비디오 컨테이너 */
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+/* 비디오 스타일 */
+.video-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 비디오 위에 텍스트 및 버튼 */
+.video-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  width: 100%;
+  padding: 0 20px; /* 좌우 여백 */
+  box-sizing: border-box;
+}
+
+/* 제목 스타일 */
+.video-overlay h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 부제목 스타일 */
+.video-overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* 버튼 스타일 */
+.video-overlay button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #6DD2FF;
+  color: black;
+  --bs-btn-active-bg: #6DD2FF;
+  --bs-btn-active-color: black;
+  --bs-btn-hover-color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* 컨테이너 최대 너비 */
+.container {
+  max-width: 80%;
+}
+
+/* 그리드 마진, 패딩 제거 */
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.no-gutters > .col,
+.no-gutters > [class*="col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/* main nav css */
+.full-width-nav {
+  background-color: #6DD2FF; /* 전체 바 색상 */
+  border-radius: 8px;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item-custom {
+  flex: 1;
+  text-align: center;
+}
+
+.nav-item-custom .nav-link {
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 0;
+  position: relative;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-item-custom .nav-link.active {
+  background-color: #3765e2;
+  font-weight: 700;
+}
+
+.nav-item-custom .nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; /* 화살표 위치 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #3765e2; /* 화살표 색상 */
+}
+
+/* 구분선 스타일 */
+.divider {
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.6);
+  height: 20px;
+}
+
+
+@media (max-width: 767px) {
+
+
+  .mkt h1,
+  .mkt p {
+    display: none;
+  }
+
+
+  .video-container{
+    margin-top: 55px;
+  }
+
+  .video-overlay h1 {
+    font-size: 2rem;
+  }
+  
+  .video-overlay p {
+    font-size: 1rem;
+  }
+
+  .video-overlay button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+

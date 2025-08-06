@@ -1,0 +1,44 @@
+.fc-day-sun a {
+    color: red;
+}
+  
+/* 토요일 날짜: 파란색 */
+.fc-day-sat a {
+    color: blue;
+}
+
+
+.fc-col-header-cell{
+    color: black;
+}
+
+.fc-col-header-cell-cushion{
+    color: black;
+    text-decoration-line: none;
+}
+
+.fc-daygrid-day-number{
+    color: black;
+    text-decoration-line: none;
+}
+
+/* .fc-event-title-container{
+    background-color: lightblue;
+} */
+ 
+/* .fc-header-toolbar{
+    font-size: 0.7em;
+} */
+
+@media (max-width: 768px) {
+    .fc {
+      font-size: 14px; /* 글꼴 크기 조정 */
+      margin: 0; /* 마진 조정 */
+    }
+    .fc-toolbar {
+      padding: 0 10px; /* 툴바의 패딩 조정 */
+    }
+    .fc-daygrid-day-number {
+      font-size: 12px; /* 날짜 숫자 크기 조정 */
+    }
+  }

@@ -1,0 +1,40 @@
+/* SbzzFile.css */
+.card-img-top-small {
+    height: 150px;
+    object-fit: cover;
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+  }
+  
+  .card-title-small {
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .card-text-small {
+    font-size: 0.9rem;
+    text-align: center;
+    color: #555;
+  }
+  
+  .card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .pagination {
+    justify-content: center;
+  }
+  

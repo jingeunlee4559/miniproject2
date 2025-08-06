@@ -1,0 +1,19 @@
+.mamenu2c-container {
+    background-color: #6DD2FF; 
+    /* color: black; */
+    border-radius: 25px;
+}
+
+.mamenu2c .nav-link {
+    color: black;
+    font-weight: bold;
+    margin: 5px 10px; 
+}
+
+@media (max-width: 768px) {
+  .mamenu2c .nav-link {
+    display: block;
+    text-align: center;
+    margin: 10px auto; 
+  }
+}
