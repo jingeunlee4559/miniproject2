@@ -29,7 +29,6 @@ function Login() {
             // 로그인 성공 시 처리
             window.sessionStorage.setItem("mem_id", data.mem_id);
             window.sessionStorage.setItem("mem_name", data.mem_name);
-            window.sessionStorage.setItem("mem_name", data.mem_name);
             window.sessionStorage.setItem("session", data.session);
             
 

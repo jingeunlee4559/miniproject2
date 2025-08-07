@@ -24,7 +24,7 @@ const SbzzFile = () => {
 
   useEffect(() => {
     axios
-      .post(`/Myinfo/s/search/${mem_id}`)
+      .post(`api/Myinfo/s/search/${mem_id}`)
       .then((res) => {
         console.log(res.data, 'dfsdfds');
         console.log(res.data.result, 'dsfsdfsdfsd');

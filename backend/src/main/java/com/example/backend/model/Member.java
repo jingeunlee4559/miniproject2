@@ -17,7 +17,7 @@ public class Member {
     private String mem_name;
     private String mem_birth; 
     private String mem_phone;
-    private int mem_role;
+    private MemberRole mem_role;
     private String joined_at;
     private String mem_email;
 

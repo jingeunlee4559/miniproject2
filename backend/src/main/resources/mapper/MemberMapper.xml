@@ -12,9 +12,39 @@ INSERT INTO MEMBER (
 ) VALUES (
     #{mem_id}, #{mem_pw}, #{mem_name},
     TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
-    #{mem_phone}, 1, #{mem_email}
+    #{mem_phone},
+    #{mem_role},
+    #{mem_email}
 )
 </insert>
+
+    <update id="updateMember">
+        UPDATE MEMBER
+        <set>
+        <if test="mem_pw != null and mem_pw != ''">
+            mem_pw = #{mem_pw},
+        </if>
+        <if test="mem_name != null and mem_name != ''">
+            mem_name = #{mem_name},
+        </if>
+        <if test="mem_birth != null">
+            TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
+        </if>
+        <if test="mem_phone != null and mem_phone != ''">
+            mem_phone = #{mem_phone},
+        </if>
+        <if test="mem_email != null and mem_email != ''">
+            mem_email = #{mem_email},
+        </if>
+        </set>
+        WHERE mem_id = #{mem_id}
+    </update>
+
+    <update id="updateMemberRole">
+        UPDATE MEMBER
+        SET mem_role = #{mem_role}
+        WHERE mem_id = #{mem_id}
+    </update>
 
     <!-- 아이디 중복 체크 -->
     <select id="checkId" resultType="java.lang.Integer" parameterType="java.lang.String">

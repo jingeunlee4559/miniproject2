@@ -19,13 +19,13 @@ const Infomy = () => {
   const mem_id = window.sessionStorage.getItem('mem_id');
 
   useEffect(() => {
-    axios.post(`/Myinfo/${mem_id}`)
+    axios.get(`/api/Myinfo/${mem_id}`)
       .then((res) => {
-        setInfoId(res.data.Myinfo[0].mem_id);
-        setInfoEmail(res.data.Myinfo[0].mem_email);
-        setInfoNick(res.data.Myinfo[0].mem_nick);
-        setInfoPhon(res.data.Myinfo[0].mem_phone);
-        setInfoPw(res.data.Myinfo[0].mem_pw); // 해시된 비밀번호
+        setInfoId(res.data.mem_id);
+        setInfoEmail(res.data.mem_email);
+        //setInfoNick(res.data.mem_nick);
+        setInfoPhon(res.data.mem_phone);
+        setInfoPw(res.data.mem_pw); // 해시된 비밀번호
       })
 
       .catch((error) => {
@@ -50,22 +50,23 @@ const Infomy = () => {
     }).then((passwordResult) => {
       if (passwordResult.isConfirmed) {
         const inputPassword = passwordResult.value;
-        const hashedInputPassword = md5(inputPassword);
-        console.log(hashedInputPassword, '입력받은 번호');
-        console.log(InfoPw, 'db저장번호');
 
+    axios.post(`/api/checkPassword`, { memId: mem_id, password: inputPassword })
+      .then((res)=>{
 
-        if (hashedInputPassword === InfoPw) {
+        if (res.data === true) {
 
           console.log("여기까지 들어오니?");
-          const updatedInfo = {
-            mem_email: InfoEmail,
-            mem_nick: InfoNick,
-            mem_phone: InfoPhon,
-            mem_pw: InfoPws ? md5(InfoPws) : InfoPw
-          };
+            const userData = {
+              mem_id: InfoEmail,
+              mem_pw: inputPassword,
+              //mem_name: formData.mem_name,
+              //mem_birth: formData.mem_birth,
+              mem_phone: InfoPhon,
+              mem_email: InfoEmail,
+            };
 
-          axios.post(`/Myinfo/UpdateMyinfo/${mem_id}`, updatedInfo)
+          axios.put(`/api/Myinfo/updateMember/${mem_id}`, userData)
             .then(() => {
               Swal.fire({
                 icon: 'success',
@@ -88,7 +89,8 @@ const Infomy = () => {
             confirmButtonText: '확인'
           });
         }
-      }
+      });
+    }
     });
   };
 
@@ -101,6 +103,7 @@ const Infomy = () => {
       cancelButtonText: '취소'
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log("confirm");
         Swal.fire({
           title: '현재 비밀번호를 입력하세요',
           input: 'password',
@@ -115,15 +118,15 @@ const Infomy = () => {
         }).then((passwordResult) => {
           if (passwordResult.isConfirmed) {
             const inputPassword = passwordResult.value;
-            const hashedInputPassword = md5(inputPassword);
-            console.log(hashedInputPassword, '입력받은 번호');
-            console.log(InfoPw, 'db저장번호');
+            // const hashedInputPassword = md5(inputPassword);
+            // console.log(hashedInputPassword, '입력받은 번호');
+            // console.log(InfoPw, 'db저장번호');
 
-
-            if (hashedInputPassword === InfoPw) {
-
+    axios.post(`/api/checkPassword`, { memId: mem_id, password: inputPassword })
+      .then((res)=>{
+            if (res.data === true) {
               console.log("여기까지 들어오니?");
-              axios.delete(`/Myinfo/Delete/${mem_id}`)
+              axios.delete(`/api/Myinfo/deleteMember`)
                 .then(() => {
                   Swal.fire({
                     icon: 'success',
@@ -148,8 +151,8 @@ const Infomy = () => {
                 confirmButtonText: '확인'
               });
             }
-          }
-        });;
+          })
+        }});;
       }
     });
   };
