@@ -58,8 +58,7 @@ function Board() {
                     <Col className="d-flex justify-content-left">
                         <h3>게시판</h3>
                     </Col>
-                </Row>
-                {seq == 0 && (
+                </Row>   
                     <Row className="mt-3 mt-md-0">
                         <Col xs={12} className="d-flex justify-content-end">
                             <Button
@@ -70,8 +69,7 @@ function Board() {
                                 글쓰기
                             </Button>
                         </Col>
-                    </Row>
-                )}
+                    </Row>   
                 <Row className="my-5">
                     <Col>
                         <Paginated
