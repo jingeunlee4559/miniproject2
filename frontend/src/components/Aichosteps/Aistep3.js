@@ -56,7 +56,6 @@ const Next = async () => {
   formData.append('lref', data.shareData.lref);
   // formData.append('sref', data.shareData.sref);
   formData.append('dates', data.shareData.dates);
-  formData.append('times', data.shareData.times);
   formData.append('moneys', data.shareData.moneys);
   formData.append('persons', persons);
   formData.append('pluspersons', pluspersons);
@@ -65,15 +64,14 @@ const Next = async () => {
       const response = await axios.post('http://localhost:8500/upload', formData);
 
       if (response.status === 200) {
-          let finalData = {
-              lref: data.shareData.lref,
-              sref: data.shareData.sref,
-              dates: data.shareData.dates,
-              times: data.shareData.times,
-              moneys: data.shareData.moneys,
-              persons: persons,
-              pluspersons: pluspersons,
-          };
+                     let finalData = {
+               lref: data.shareData.lref,
+               sref: data.shareData.sref,
+               dates: data.shareData.dates,
+               moneys: data.shareData.moneys,
+               persons: persons,
+               pluspersons: pluspersons,
+           };
 
           data.setShare(finalData);
           navigateTo("/Aichoice/2/3/4");
@@ -86,54 +84,55 @@ const Next = async () => {
 };
 
   return (
-    <Container className="my-5">
+    <Container className="my-2">
       <Row className="justify-content-center">
-        <Col md={8}>
-          <Card className="m-auto">
+        <Col md={6}>
+          <Card className="m-auto aichoice-card">
             <Row>
               <Col className="Qtitle">Q 03.</Col>
             </Row>
-            <Row className="my-2">
-              <Col className="Qti2">
+            <Row className="my-1">
+              <Col className="Qti2 text-center">
                누구와 함께 떠나는 여행인가요?
               </Col>
             </Row>
-            <Row className="my-3">
-              <Col className="Qtit3">예상 인원수를 알려주세요</Col>
+            <Row className="my-2">
+              <Col className="Qtit3 text-center">예상 인원수를 알려주세요</Col>
             </Row>
 
             <Row>
               <Col md={11} sm={10} xs={10} className="m-auto">
                 <Form.Select value={persons} onChange={handlePersonsChange}>
                   <option value="">선택하세요</option>
-                  <option value='200'>200명 이하</option>
-                  <option value='250'>200명 ~ 250명</option>
-                  <option value='300'>250명 ~ 300명</option>
-                  <option value='350'>300명 ~ 350명</option>
-                  <option value='400'>350명 이상</option>
+                  <option value='1인'>1인</option>
+                  <option value='2인'>2인</option>
+                  <option value='3~5인'>3~5인</option>
+                  <option value='5~8인'>5~8인</option>
+                  <option value='10인 이상'>10인 이상</option>
                 </Form.Select>
               </Col>
             </Row>
 
-            <Row className="my-5">
+            <Row className="my-3">
               <Col>
                 <Row className="my-2">
-                  <Col className="Qtit3">어떤 스타일의 여행을 원하시나요?</Col>
+                  <Col className="Qtit3 text-center">어떤 스타일의 여행을 원하시나요?</Col>
                 </Row>
 
                 <Row>
                   <Col md={11} sm={10} xs={10} className="m-auto">
                     <Form.Select value={pluspersons} onChange={handlePlusPersonsChange}>
                       <option value="">선택하세요</option>
-                      <option>YES</option>
-                      <option>NO</option>
+                      <option>힐링과 휴식</option>
+                      <option>분위기 있는</option>
+                      <option>액티비티 중심</option>
                     </Form.Select>
                   </Col>
                 </Row>
               </Col>
             </Row>
             <Row>
-            <Col className='mt-5 text-center'>
+            <Col className='mt-3 text-center'>
                 <Button  onClick={Back} className="me-2 btns">취소</Button>
                 <Button  onClick={Next} className="btns">다음</Button>
               </Col>

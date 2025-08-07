@@ -157,44 +157,44 @@ const Aistep4 = () => {
   }
 
   return (
-    <Container className="my-5">
+    <Container className="my-2">
       <Row className="justify-content-center">
         <Col md={8} sm={10} xs={12}>
-          <Card className="m-auto p-4 shadow-lg">
+          <Card className="m-auto p-4 shadow-lg aichoice-card">
             <Row>
               <Col className="text-center">
                 <h2 className="text-purple">결과</h2>
               </Col>
             </Row>
-            <Row className="mt-5">
+            <Row className="mt-3">
               <Col md={12}>
                 <InfoCard title="웨딩홀" item={mainItem} />
               </Col>
             </Row>
             <hr />
-            <Row className="mt-3">
+            <Row className="mt-2">
               <Col md={12}>
                 <InfoCard title="스튜디오" item={studioItem} />
               </Col>
             </Row>
             <hr />
-            <Row className="mt-3">
+            <Row className="mt-2">
               <Col md={12}>
                 <InfoCard title="드레스" item={dressItem} />
               </Col>
             </Row>
             <hr />
-            <Row className="mt-3">
+            <Row className="mt-2">
               <Col md={12}>
                 <InfoCard title="메이크업" item={makeupItem} />
               </Col>
             </Row>
-            <Row className="text-center my-5">
+            <Row className="text-center my-3">
               <Col>
                 <Button className="me-4 btns">총합: {totalPrice}원</Button>
               </Col>
             </Row>
-            <Row className="text-center mt-5">
+            <Row className="text-center mt-3">
               <Col>
                 <Button onClick={handleBack} className="me-2 btns">취소</Button>
                 <Button onClick={handleSave} className="btns">저장</Button>
