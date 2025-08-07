@@ -29,7 +29,7 @@ export  const Appdata = createContext();
 function App() {
 
     const [data,setData] = useState({nick :'냉면'});
-
+    // 커밋
   return (
     <div className='App'>
       <Appdata.Provider value={{shareData : data,setShare : setData}}>
