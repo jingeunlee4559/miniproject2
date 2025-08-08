@@ -3,11 +3,6 @@
     color: #6DD2FF;
   }
 
-  /* 네비게이션 바 아래 여백 추가 */
-  body {
-    padding-top: 80px;
-  }
-
   .Qti2 {
     font-size: 20px;
     text-align: center;
