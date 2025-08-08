@@ -17,7 +17,6 @@ function App() {
   return (
     <div className='App'>
       <Appdata.Provider value={{shareData : data,setShare : setData}}>
-      <Navs/>
       <Approutes/>
       </Appdata.Provider>
     </div>
