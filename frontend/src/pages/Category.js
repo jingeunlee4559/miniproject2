@@ -6,7 +6,7 @@ import Search from "../components/Search";
 // import axios from "../axios";
 
 const Category = () => {
-  // ✅ 하드코딩된 데이터
+
   const hardcodedCategorys = [
     {
       store_idx: 1,

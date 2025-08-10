@@ -21,45 +21,38 @@ import Mypage from '../pages/Mypage';
 import Infomy from '../components/Mypage/Infomy';
 import Schedule from '../components/Mypage/Schedule';
 import MainLayout from '../layouts/MainLayout.js';
-
-
+import Categorydetail from '../pages/Categorydetail.js';
 
 function Approutes() {
-  return (
-    <Routes>
+    return (
+        <Routes>
+            <Route element={<MainLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/board" element={<Board />} />
+                <Route path="/boards" element={<Boards />} />
+                <Route path="/community" element={<Commuinty />} />
+                <Route path="/writepost" element={<WritePost />} />
+                <Route path="/category" element={<Category />} />
+                <Route path="/board/:board_seq" element={<DetailPage />} />
+                <Route path="/Category/:store_idx" element={<Categorydetail />} />
+            </Route>
 
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/board" element={<Board />} />
-        <Route path="/boards" element={<Boards />} />
-        <Route path="/community" element={<Commuinty />} />
-        <Route path="/writepost" element={<WritePost />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/board/:board_seq" element={<DetailPage />} />
-      </Route>
-
-
-      <Route element={<MainLayout />}>
-        <Route path="/aichoice" element={<Aicho />}>
-          <Route index element={<Aistep1 />} />
-          <Route path="2" element={<Aistep2 />} />
-          <Route path="2/3" element={<Aistep3 />} />
-          <Route path="2/3/4" element={<Aistep4 />} />
-        </Route>
-        <Route path="/mypage" element={<Mypage />}>
-          <Route index element={<Infomy />} />
-          <Route path="schedule" element={<Schedule />} />
-        </Route>
-      </Route>
-
-   
- 
-
-   
-    </Routes>
-  );
+            <Route element={<MainLayout />}>
+                <Route path="/aichoice" element={<Aicho />}>
+                    <Route index element={<Aistep1 />} />
+                    <Route path="2" element={<Aistep2 />} />
+                    <Route path="2/3" element={<Aistep3 />} />
+                    <Route path="2/3/4" element={<Aistep4 />} />
+                </Route>
+                <Route path="/mypage" element={<Mypage />}>
+                    <Route index element={<Infomy />} />
+                    <Route path="schedule" element={<Schedule />} />
+                </Route>
+            </Route>
+        </Routes>
+    );
 }
 
 export default Approutes;
