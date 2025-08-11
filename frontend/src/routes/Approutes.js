@@ -5,7 +5,7 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Board from '../pages/Board';
 import Register from '../pages/Register';
-import DetailPage from '../pages/DetaPage';
+import DetailPage from '../pages/DetailPage.js';
 import Boards from '../pages/Boards';
 import Commuinty from '../pages/Commuinty';
 import WritePost from '../pages/WritePost';

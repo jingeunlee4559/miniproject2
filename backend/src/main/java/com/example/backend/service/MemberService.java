@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.backend.mapper.MemberMapper;
 import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;
+import com.example.backend.model.MemberStatus;
 
 @Service
 public class MemberService {
@@ -27,6 +28,7 @@ public class MemberService {
         // 비밀번호 암호화
         String encodedPw = passwordEncoder.encode(member.getMem_pw());
         member.setMem_pw(encodedPw);
+        member.setMem_status(MemberStatus.ACTIVE);
         member.setMem_role(MemberRole.USER);
         memberMapper.registerMember(member);
     }
@@ -38,15 +40,15 @@ public class MemberService {
     }
 
     public void withdrawMember(String mem_id) {
-        memberMapper.updateMemberRole(mem_id, MemberRole.WITHDRAW);
+        memberMapper.updateMemberStatus(mem_id, MemberStatus.INACTIVE);
     }
 
     public boolean isIdAvailable(String mem_id) {
         return memberMapper.checkId(mem_id) == 0;
     }
 
-    public Member login(String memId, String rawPassword) {
-        Member member = memberMapper.findById(memId);
+    public Member login(String mem_id, String rawPassword) {
+        Member member = memberMapper.findById(mem_id);
 
         if (member == null) {
             return null;
@@ -54,14 +56,14 @@ public class MemberService {
         if (!passwordEncoder.matches(rawPassword, member.getMem_pw())) {
             return null;
         }
-        if (member.getMem_role() == MemberRole.INACTIVE || member.getMem_role() == MemberRole.WITHDRAW) {
+        if (member.getMem_status() != MemberStatus.ACTIVE) {
             return null;
         }
         return member;
     }
 
-    public boolean checkPassword(String memId, String rawPassword) {
-        Member member = memberMapper.findById(memId);
+    public boolean verifyPassword(String mem_id, String rawPassword) {
+        Member member = memberMapper.findById(mem_id);
 
         if (member == null) {
             return false;

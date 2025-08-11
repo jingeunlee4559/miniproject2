@@ -8,12 +8,13 @@
 <!-- MemberMapper.xml -->
 <insert id="registerMember">
 INSERT INTO MEMBER (
-    mem_id, mem_pw, mem_name, mem_birth, mem_phone, mem_role, mem_email
+    mem_id, mem_pw, mem_name, mem_birth, mem_phone, mem_role, mem_status, mem_email
 ) VALUES (
     #{mem_id}, #{mem_pw}, #{mem_name},
     TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
     #{mem_phone},
     #{mem_role},
+    #{mem_status},
     #{mem_email}
 )
 </insert>
@@ -46,13 +47,19 @@ INSERT INTO MEMBER (
         WHERE mem_id = #{mem_id}
     </update>
 
+    <update id="updateMemberStatus">
+        UPDATE MEMBER
+        SET mem_status = #{mem_status}
+        WHERE mem_id = #{mem_id}
+    </update>
+
     <!-- 아이디 중복 체크 -->
     <select id="checkId" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT COUNT(*) FROM MEMBER WHERE mem_id = #{memId}
     </select>
 
 <select id="findById" parameterType="string" resultType="com.example.backend.model.Member">
-    SELECT mem_id, mem_pw, mem_name, mem_phone, mem_email, mem_role
+    SELECT mem_id, mem_pw, mem_name, mem_phone, mem_email, mem_role, mem_status
     FROM MEMBER
     WHERE mem_id = #{mem_id}
 </select>

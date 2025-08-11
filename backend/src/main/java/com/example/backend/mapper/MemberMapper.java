@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;
+import com.example.backend.model.MemberStatus;
 
 @Mapper
 public interface MemberMapper {
@@ -19,7 +20,9 @@ public interface MemberMapper {
 
     void updateMember(Member member);
     
-    void updateMemberRole(String mem_id, MemberRole mem_role);
+    void updateMemberStatus(String mem_id, MemberStatus mem_status);
+
+    void updateMemberRole(String mem_id, MemberRole mem_Role);
 
     Member findById(@Param("mem_id") String memId);
 }
