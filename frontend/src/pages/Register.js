@@ -35,7 +35,7 @@ function Register() {
             const validId = validateId(value);
             setIsIdValid(validId);
             if (validId) {
-                const response = await axios.get(`/api/checkId/${value}`);
+                const response = await axios.get(`/api/register/checkId?mem_id=${value}`);
                 setIsIdValid(response.data);
                 setErrorMessage(response.data ? '사용 가능한 아이디입니다.' : '이미 사용중인 아이디입니다.');
             } else {

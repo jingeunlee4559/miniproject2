@@ -19,7 +19,7 @@ const Infomy = () => {
   const mem_id = window.sessionStorage.getItem('mem_id');
 
   useEffect(() => {
-    axios.get(`/api/Myinfo/${mem_id}`)
+    axios.get(`/api/me`)
       .then((res) => {
         setInfoId(res.data.mem_id);
         setInfoEmail(res.data.mem_email);
@@ -51,14 +51,14 @@ const Infomy = () => {
       if (passwordResult.isConfirmed) {
         const inputPassword = passwordResult.value;
 
-    axios.post(`/api/checkPassword`, { memId: mem_id, password: inputPassword })
+    axios.post(`/api/me/password/verify`, inputPassword)
       .then((res)=>{
 
         if (res.data === true) {
 
           console.log("여기까지 들어오니?");
             const userData = {
-              mem_id: InfoEmail,
+              mem_id: InfoId,
               mem_pw: inputPassword,
               //mem_name: formData.mem_name,
               //mem_birth: formData.mem_birth,
@@ -66,7 +66,7 @@ const Infomy = () => {
               mem_email: InfoEmail,
             };
 
-          axios.put(`/api/Myinfo/updateMember/${mem_id}`, userData)
+          axios.put(`/api/me`, userData)
             .then(() => {
               Swal.fire({
                 icon: 'success',
@@ -122,11 +122,11 @@ const Infomy = () => {
             // console.log(hashedInputPassword, '입력받은 번호');
             // console.log(InfoPw, 'db저장번호');
 
-    axios.post(`/api/checkPassword`, { memId: mem_id, password: inputPassword })
+    axios.post(`/api/me/password/verify`, { memId: mem_id, password: inputPassword })
       .then((res)=>{
             if (res.data === true) {
               console.log("여기까지 들어오니?");
-              axios.delete(`/api/Myinfo/deleteMember`)
+              axios.delete(`/api/me`)
                 .then(() => {
                   Swal.fire({
                     icon: 'success',
