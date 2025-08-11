@@ -1,13 +1,11 @@
-.btnms{
-    background-color: #6DD2FF;
+.btnms {
+    background-color: #6dd2ff;
     color: black;
     font-weight: bold;
     height: 40px;
     border: none;
-    --bs-btn-active-bg :#6DD2FF;
-    --bs-btn-active-color :black;
-    --bs-btn-hover-color :black;
-    --bs-btn-hover-bg: #6DD2FF;
-    
+    --bs-btn-active-bg: #6dd2ff;
+    --bs-btn-active-color: black;
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: #6dd2ff;
 }
-

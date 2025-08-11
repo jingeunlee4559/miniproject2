@@ -130,7 +130,7 @@ function Home() {
             <Container className="mt-4">
                 <Row className="my-2 no-gutters">
                     <Col lg={12} md={12} sm={12} className="t2 text-center">
-                        기능
+                        <h2>기능소개</h2>
                     </Col>
                 </Row>
                 <Row className="d-flex align-items-center justify-content-center" data-aos="fade-left" data-aos-offset="300" data-aos-easing="ease-in-sine">

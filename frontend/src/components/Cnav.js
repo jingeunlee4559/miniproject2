@@ -1,67 +1,77 @@
-import React, { useState, useEffect } from "react";
-import { Container, Nav } from "react-bootstrap";
-import axios from "../axios";
-import "../css/Cnav.css";
+import React, { useState } from 'react';
+import '../css/Cnav.css';
 
 const Cnav = ({ onCategorySelect }) => {
-  // const [categories, setCategories] = useState([]);
-  // useEffect(() => {
-  //   axios
-  //     .get("/Category")
-  //     .then((response) => {
-  //       console.log(response.data.Category);
-  //       const categoryData = response.data.Category;
-  //       const groupedCategories = categoryData.reduce((acc, cur) => {
-  //         const key = cur.category_idx;
+    const categories = [
+        {
+            category_p_name: '전라남도',
+            color: '#FF9F43',
+            sub: ['여수시', '광양시', '목포시', '순천시', '담양군'],
+        },
+        {
+            category_p_name: '광주광역시',
+            color: '#16A085',
+            sub: ['남구', '동구', '북구', '광산구', '서구'],
+        },
+    ];
 
-  //         acc[key] = {
-  //           category_idx: key,
-  //           category_name: cur.category_name,
-  //           category_p_name: cur.category_p_name,
-  //         };
+    const [openCategory, setOpenCategory] = useState(null);
 
-  //         return acc;
-  //       }, {});
+    const handleCategoryClick = (name) => {
+        // 1차 카테고리 클릭 시
+        setOpenCategory(openCategory === name ? null : name);
+        onCategorySelect({
+            category_idx: null,
+            category_p_name: name,
+            category_name: '', // 1차 선택이므로 비움
+        });
+    };
 
-  //       setCategories(Object.values(groupedCategories));
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching categories:", error);
-  //     });
-  // }, []);
+    return (
+        <div className="cnav-container">
+            {/* 1차 카테고리 버튼 */}
+            <div className="first-category-row">
+                {categories.map((cat, idx) => (
+                    <button
+                        key={idx}
+                        className={`first-category-btn ${openCategory === cat.category_p_name ? 'active' : ''}`}
+                        style={{
+                            backgroundColor: openCategory === cat.category_p_name ? cat.color : '#f1f1f1',
+                            color: openCategory === cat.category_p_name ? 'white' : '#333',
+                        }}
+                        onClick={() => handleCategoryClick(cat.category_p_name)}
+                    >
+                        {cat.category_p_name}
+                    </button>
+                ))}
+            </div>
 
-  const handleCategoryClick = (category) => {
-    if (typeof onCategorySelect === "function") {
-      // onCategorySelect(category); // 선택한 카테고리를 부모 컴포넌트로 전달
-      console.log(category);
-    } else {
-      console.warn("onCategorySelect is not defined or not a function");
-    }
-  };
-
-  let categories=[
-    {parentCategorySeq : '광주'},
-    {parentCategorySeq : '서울'},
-    {parentCategorySeq: '부산'},
-    {parentCategorySeq : '대구'}
-]
-
-  return (
-    <Container fluid className="mamenu2-containerm custom-nav-containerm">
-      <Nav className="mamenu2m justify-content-center custom-navm">
-        {categories.map((category, index) => (
-          <Nav.Item key={index}>
-            <Nav.Link
-              eventKey={`link-${index}`}
-              onClick={() => handleCategoryClick(category)}
-              className="navlinkM"
-            >
-              {category.parentCategorySeq}
-            </Nav.Link>
-          </Nav.Item>
-        ))}
-      </Nav>
-    </Container>
-  );
+            {/* 2차 카테고리 영역 */}
+            {categories.map(
+                (cat, idx) =>
+                    openCategory === cat.category_p_name && (
+                        <div key={idx} className="second-category-container">
+                            {cat.sub.map((subName, i) => (
+                                <div
+                                    key={i}
+                                    className="second-category-card"
+                                    style={{ borderTop: `3px solid ${cat.color}` }}
+                                    onClick={() =>
+                                        onCategorySelect({
+                                            category_idx: i + 1,
+                                            category_p_name: cat.category_p_name,
+                                            category_name: subName,
+                                        })
+                                    }
+                                >
+                                    {subName}
+                                </div>
+                            ))}
+                        </div>
+                    ),
+            )}
+        </div>
+    );
 };
+
 export default Cnav;

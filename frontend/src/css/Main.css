@@ -67,6 +67,7 @@ body {
 .video-overlay p {
     font-size: 1.5rem;
     margin-bottom: 2rem;
+    color: #f0f0f0;
 }
 
 /* 버튼 스타일 */
@@ -74,11 +75,12 @@ body {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     color: #fff;
-    background-color: #6dd2ff;
-    color: black;
-    --bs-btn-active-bg: #6dd2ff;
-    --bs-btn-active-color: black;
-    --bs-btn-hover-color: black;
+    background-color: #1abc9c;
+    color: #ffffff;
+    --bs-btn-active-bg: #1abc9c;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #1abc9c;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -157,6 +159,15 @@ body {
     height: 20px;
 }
 
+@media (max-width: 986px) {
+    .video-overlay h1 {
+        font-size: 2.5rem;
+    }
+
+    .video-overlay p {
+        font-size: 1.2rem;
+    }
+}
 @media (max-width: 767px) {
     /* 
   .mkt h1,
@@ -182,26 +193,34 @@ body {
     padding: 0.5rem 1rem;
   } */
 
-    @media (max-width: 767px) {
-        .mkt {
-            display: none;
-        }
+    .mkt {
+        display: none;
+    }
 
-        .video-container {
-            margin-top: 55px;
-        }
+    .video-container {
+        margin-top: 55px;
+    }
 
-        .video-overlay h1 {
-            font-size: 1.5rem;
-        }
+    .video-overlay h1 {
+        font-size: 1.5rem;
+    }
 
-        .video-overlay p {
-            font-size: 0.8rem;
-        }
+    .video-overlay p {
+        font-size: 0.8rem;
+    }
 
-        .video-overlay button {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-        }
+    .video-overlay button {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 444px) {
+    .video-overlay h1 {
+        font-size: 1rem;
+    }
+
+    .video-overlay p {
+        font-size: 0.6rem;
     }
 }

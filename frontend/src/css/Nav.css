@@ -4,36 +4,35 @@
     width: 100%;
     top: 0;
     left: 0;
-    height: 9%;
     z-index: 1030;
     transition: background-color 0.3s ease;
     background-color: transparent; /* 초기 상태에서 투명 배경 */
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 /* 스크롤된 상태의 네비게이션 바 스타일 */
 .custom-navbar.scrolled {
-    background-color: #4dd0e1; /* 스크롤 후 배경색 */
+    background-color: #1abc9c; /* 스크롤 후 배경색 */
 }
 
 .custom-navbar:hover {
-    background-color: #4dd0e1;
+    background-color: #1abc9c;
 }
 
 .nav-link {
     position: relative;
     padding-bottom: 0.5rem;
-    color: black;
+    color: white;
     overflow: hidden;
     font-weight: bold;
 }
 
 .nav-link:hover {
-    color: black;
+    color: white;
 }
 
 .navbar-toggler-icon {
-    background-color: #6dd2ff;
+    background-color: #1abc9c;
 }
 
 /* 하이라이트 바 기본 스타일 */
@@ -64,7 +63,7 @@
 
 .nav-link:hover::after {
     width: 100%;
-    background-color: black;
+    background-color: white;
 }
 
 .logo5 {
@@ -75,7 +74,7 @@
 }
 
 .navbar-nav {
-    --bs-nav-link-hover-color: black;
+    --bs-nav-link-hover-color: white;
 }
 
 .navbar-toggler {
@@ -106,6 +105,6 @@
         left: 0;
         z-index: 1030;
         transition: background-color 0.3s ease;
-        background-color: #6dd2ff; /* 초기 상태에서 투명 배경 */
+        background-color: #1abc9c; /* 초기 상태에서 투명 배경 */
     }
 }

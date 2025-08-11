@@ -67,10 +67,7 @@ function Navs() {
                     <Navbar.Brand onClick={() => navigateTo('/')}>
                         <img src="img/WDP_b.png" alt="로고" className="navbar-logo" />
                     </Navbar.Brand>
-                    <Navbar.Toggle
-                        aria-controls="basic-navbar-nav"
-                        onClick={() => setExpanded(expanded ? false : true)} // ✅ 토글 동작
-                    />
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : true)} />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto justify-content-center">
                             <Nav.Link onClick={() => navigateTo('/Aichoice')}>Ai추천</Nav.Link>
