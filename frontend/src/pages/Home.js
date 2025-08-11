@@ -96,19 +96,31 @@ function Home() {
                 </Row>
 
                 <Row className="justify-content-center mb-4">
-                    <Nav className="custom-nav full-width-nav" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-                        <Nav.Item className="nav-item-custom">
-                            <Nav.Link eventKey="age">연령별</Nav.Link>
-                        </Nav.Item>
-                        <div className="divider"></div>
-                        <Nav.Item className="nav-item-custom">
-                            <Nav.Link eventKey="gender">성별</Nav.Link>
-                        </Nav.Item>
-                        <div className="divider"></div>
-                        <Nav.Item className="nav-item-custom">
-                            <Nav.Link eventKey="review">리뷰별</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
+                    <div
+                        style={{
+                            width: '100vw',
+                            position: 'relative',
+                            left: '50%',
+                            right: '50%',
+                            transform: 'translateX(-50%)',
+                        }}
+                    >
+                        <Nav className="custom-nav full-width-nav" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
+                            <Nav.Item className="nav-item-custom">
+                                <Nav.Link className="m-link-nav" eventKey="age">
+                                    연령별
+                                </Nav.Link>
+                            </Nav.Item>
+                            <div className="divider"></div>
+                            <Nav.Item className="nav-item-custom">
+                                <Nav.Link eventKey="gender">성별</Nav.Link>
+                            </Nav.Item>
+                            <div className="divider"></div>
+                            <Nav.Item className="nav-item-custom">
+                                <Nav.Link eventKey="review">리뷰별</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </div>
                 </Row>
 
                 {/* 카드 리스트 */}

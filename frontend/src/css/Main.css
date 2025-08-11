@@ -106,15 +106,16 @@ body {
 
 /* main nav css */
 .full-width-nav {
-    background-color: #6dd2ff; /* 전체 바 색상 */
+    background-color: white; /* 전체 바 색상 */
+    border: solid #1abc9c;
     border-radius: 8px;
-    padding: 10px 0;
+    /* padding: 10px 0; */
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
     max-width: 100%;
-    margin: 0 auto 0 auto;
+    /* margin: 0 auto 0 auto; */
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -124,39 +125,38 @@ body {
     text-align: center;
 }
 
+.m-link-nav:hover {
+    color: black;
+}
+
 .nav-item-custom .nav-link {
-    color: #fff;
+    color: black;
     font-weight: 500;
     font-size: 16px;
-    padding: 8px 0;
     position: relative;
     border-radius: 6px;
     transition: all 0.3s ease;
 }
 
 .nav-item-custom .nav-link.active {
-    background-color: #3765e2;
+    background-color: #1abc9c;
     font-weight: 700;
 }
 
 .nav-item-custom .nav-link.active::after {
     content: '';
     position: absolute;
-    bottom: -10px; /* 화살표 위치 */
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 10px solid #3765e2; /* 화살표 색상 */
 }
 
 /* 구분선 스타일 */
 .divider {
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.6);
-    height: 20px;
+    background-color: #1abc9c;
+    height: 30px;
 }
 
 @media (max-width: 986px) {

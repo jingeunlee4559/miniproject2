@@ -27,7 +27,11 @@
     font-weight: bold;
 }
 
-.nav-link:hover {
+/* .nav-link:hover {
+    color: white;
+} */
+
+#basic-navbar-nav > Nav > .nav-link:hover {
     color: white;
 }
 
