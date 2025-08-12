@@ -210,17 +210,31 @@ const Admin = () => {
                         {
                             accessor: 'actions',
                             Header: '관리',
-                            Cell: ({ row }) =>
-                                row.original.mem_role !== 0 ? (
-                                    <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
-                                        <Button size="sm" variant="danger" onClick={() => suspendMember(row.original.id)}>
+                            Cell: ({ row }) => {
+                                const { id, mem_role } = row.original;
+
+                                if (mem_role === 0) return null;
+
+                                // 일반 회원 (1) -> 정지 버튼
+                                if (mem_role === 1) {
+                                    return (
+                                        <Button size="sm" variant="danger" onClick={() => suspendMember(id)}>
                                             정지
                                         </Button>
-                                        <Button size="sm" variant="success" onClick={() => unsuspendMember(row.original.id)}>
+                                    );
+                                }
+
+                                // 정지 회원  → 해제 버튼
+                                if (mem_role === 2) {
+                                    return (
+                                        <Button size="sm" variant="success" onClick={() => unsuspendMember(id)}>
                                             해제
                                         </Button>
-                                    </div>
-                                ) : null,
+                                    );
+                                }
+
+                                return null;
+                            },
                         },
                     ]}
                 />
