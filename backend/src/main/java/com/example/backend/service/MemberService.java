@@ -40,7 +40,15 @@ public class MemberService {
     }
 
     public void withdrawMember(String mem_id) {
-        memberMapper.updateMemberStatus(mem_id, MemberStatus.INACTIVE);
+        memberMapper.updateMemberStatus(mem_id, MemberStatus.WITHDRAW);
+    }
+
+    public void suspendMember(String mem_id) {
+        memberMapper.updateMemberStatus(mem_id, MemberStatus.SUSPEND);
+    }
+
+    public void unsuspendMember(String mem_id) {
+        memberMapper.updateMemberStatus(mem_id, MemberStatus.ACTIVE);
     }
 
     public boolean isIdAvailable(String mem_id) {

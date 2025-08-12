@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Pagination, Row, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -61,28 +61,29 @@ const Admin = () => {
         }
     };
 
-    // const fetchMembers = useCallback(async () => {
-    //     try {
-    //         const response = await axios.get('/api/members');
-    //         setMembers(response.data);
-    //     } catch (error) {
-    //         setError('회원 데이터를 불러오는 중 오류가 발생했습니다.');
-    //     }
-    // }, []);
-    const fetchMembers = useCallback(() => {
-        // 하드코딩된 회원 데이터
-        const hardcodedMembers = [
-            { mem_id: 'admin', mem_role: 0 },
-            { mem_id: 'user1', mem_role: 1 },
-            { mem_id: 'user2', mem_role: 1 },
-            { mem_id: 'bannedUser', mem_role: 2 },
-            { mem_id: 'user3', mem_role: 1 },
-            { mem_id: 'user4', mem_role: 1 },
-            { mem_id: 'user5', mem_role: 1 },
-            { mem_id: 'user6', mem_role: 1 },
-        ];
-        setMembers(hardcodedMembers);
+    const fetchMembers = useCallback(async () => {
+        try {
+            const response = await axios.get(`/api/members`);
+            console.log(response.data);
+            setMembers(response.data);
+        } catch (error) {
+            setError('회원 데이터를 불러오는 중 오류가 발생했습니다.');
+        }
     }, []);
+    // const fetchMembers = useCallback(() => {
+    //     // 하드코딩된 회원 데이터
+    //     const hardcodedMembers = [
+    //         { mem_id: 'admin', mem_role: 0 },
+    //         { mem_id: 'user1', mem_role: 1 },
+    //         { mem_id: 'user2', mem_role: 1 },
+    //         { mem_id: 'bannedUser', mem_role: 2 },
+    //         { mem_id: 'user3', mem_role: 1 },
+    //         { mem_id: 'user4', mem_role: 1 },
+    //         { mem_id: 'user5', mem_role: 1 },
+    //         { mem_id: 'user6', mem_role: 1 },
+    //     ];
+    //     setMembers(hardcodedMembers);
+    // }, []);
 
     // const fetchBoards = useCallback(async () => {
     //     try {
@@ -111,41 +112,41 @@ const Admin = () => {
         fetchBoards();
     }, [fetchMembers, fetchBoards]);
 
-    // const suspendMember = async (memberId) => {
-    //     try {
-    //         await axios.put(`/api/members/${memberId}/suspend`);
-    //         fetchMembers();
-    //     } catch (error) {
-    //         setError('회원 영구정지 실패');
-    //     }
-    // };
-    const suspendMember = (memberId) => {
-        Swal.fire({
-            icon: 'warning',
-            showCancelButton: true,
-            text: `${memberId} 정지하겠습니까?`,
-            confirmButtonText: '확인',
-            cancelButtonText: '취소',
-        });
+    const suspendMember = async (memberId) => {
+        try {
+            await axios.put(`/api/members/${memberId}/suspend`);
+            fetchMembers();
+        } catch (error) {
+            setError('회원 영구정지 실패');
+        }
     };
+    // const suspendMember = (memberId) => {
+    //     Swal.fire({
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         text: `${memberId} 정지하겠습니까?`,
+    //         confirmButtonText: '확인',
+    //         cancelButtonText: '취소',
+    //     });
+    // };
 
-    // const unsuspendMember = async (memberId) => {
-    //     try {
-    //         await axios.put(`/api/members/${memberId}/unsuspend`);
-    //         fetchMembers();
-    //     } catch (error) {
-    //         setError('회원 정지해제 실패');
-    //     }
-    // };
-    const unsuspendMember = (memberId) => {
-        Swal.fire({
-            icon: 'warning',
-            showCancelButton: true,
-            text: `${memberId} 정지 해제 (하드코딩 모드)`,
-            confirmButtonText: '확인',
-            cancelButtonText: '취소',
-        });
+    const unsuspendMember = async (memberId) => {
+        try {
+            await axios.put(`/api/members/${memberId}/unsuspend`);
+            fetchMembers();
+        } catch (error) {
+            setError('회원 정지해제 실패');
+        }
     };
+    // const unsuspendMember = (memberId) => {
+    //     Swal.fire({
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         text: `${memberId} 정지 해제 (하드코딩 모드)`,
+    //         confirmButtonText: '확인',
+    //         cancelButtonText: '취소',
+    //     });
+    // };
 
     // const deleteBoard = async (boardId) => {
     //     try {
@@ -201,8 +202,8 @@ const Admin = () => {
                 <Paginated
                     data={members.slice((currentMemberPage - 1) * ITEMS_PER_PAGE, currentMemberPage * ITEMS_PER_PAGE).map((member) => ({
                         id: member.mem_id,
-                        status: member.mem_role === 0 ? '관리자' : member.mem_role === 1 ? '일반 회원' : '정지 회원',
-                        mem_role: member.mem_role, // 버튼 조건 확인용
+                        status: member.mem_role === 'ADMIN' ? '관리자' : member.mem_role === 'USER' ? '일반 회원' : '정지 회원',
+                        mem_status: member.mem_status, // 버튼 조건 확인용
                     }))}
                     columns={[
                         { accessor: 'id', Header: 'ID' },
@@ -211,12 +212,12 @@ const Admin = () => {
                             accessor: 'actions',
                             Header: '관리',
                             Cell: ({ row }) => {
-                                const { id, mem_role } = row.original;
+                                const { id, mem_status } = row.original;
 
-                                if (mem_role === 0) return null;
+                                if (mem_status === 0) return null;
 
                                 // 일반 회원 (1) -> 정지 버튼
-                                if (mem_role === 1) {
+                                if (mem_status === 'ACTIVE') {
                                     return (
                                         <Button size="sm" variant="danger" onClick={() => suspendMember(id)}>
                                             정지
@@ -225,7 +226,7 @@ const Admin = () => {
                                 }
 
                                 // 정지 회원  → 해제 버튼
-                                if (mem_role === 2) {
+                                if (mem_status !== 'ACTIVE') {
                                     return (
                                         <Button size="sm" variant="success" onClick={() => unsuspendMember(id)}>
                                             해제
