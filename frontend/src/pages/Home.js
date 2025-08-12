@@ -6,6 +6,8 @@ import axios from '../axios';
 import { Link, useNavigate } from 'react-router-dom';
 
 import '../css/Main.css';
+import TopTravelList from '../components/TopTravelList';
+import PersonalizedTravelList from '../components/PersonalizedTravelList';
 
 function Home() {
     const navigate = useNavigate();
@@ -17,6 +19,31 @@ function Home() {
     }, []);
 
     const travelData = {
+        // TOP4 인기 여행지 (고정)
+        popular: [
+            {
+                img: '/img/travel1234.png',
+                title: '오무아무아',
+                location: '충청북도 단양군',
+            },
+            {
+                img: '/img/travel1234.png',
+                title: '해운대',
+                location: '부산광역시',
+            },
+            {
+                img: '/img/travel1234.png',
+                title: '경주 불국사',
+                location: '경상북도 경주시',
+            },
+            {
+                img: '/img/travel1234.png',
+                title: '에버랜드',
+                location: '경기도 용인시',
+            },
+        ],
+
+        // 네비게이션용 데이터
         age: [
             {
                 img: '/img/travel1234.png',
@@ -55,6 +82,11 @@ function Home() {
                 title: '성산일출봉',
                 location: '제주도',
             },
+            {
+                img: '/img/travel1234.png',
+                title: '대야산',
+                location: '경상북도 문경시',
+            },
         ],
         review: [
             {
@@ -66,6 +98,16 @@ function Home() {
                 img: '/img/travel1234.png',
                 title: '전주 한옥마을',
                 location: '전라북도 전주시',
+            },
+            {
+                img: '/img/travel1234.png',
+                title: '대야산',
+                location: '경상북도 문경시',
+            },
+            {
+                img: '/img/travel1234.png',
+                title: '대야산',
+                location: '경상북도 문경시',
             },
         ],
     };
@@ -89,54 +131,13 @@ function Home() {
                 </Row>
             </Container>
 
-            <Container className="mt-5">
-                <Row className="text-center mb-3">
-                    <h2 className="fw-bold">여행 추천</h2>
-                    <p className="text-muted">당신의 성향, 마음에 쏙 들 여행지를 추천해 드릴게요.</p>
+            <Container className="mt-5 pt-5">
+                <Row className="text-center mb-3 pt-5">
+                    <h2 className="fw-bold">🔥 지금 가장 인기 있는 여행지 TOP4</h2>
                 </Row>
+                <TopTravelList travelData={travelData.popular} />
 
-                <Row className="justify-content-center mb-4">
-                    <div
-                        style={{
-                            width: '100vw',
-                            position: 'relative',
-                            left: '50%',
-                            right: '50%',
-                            transform: 'translateX(-50%)',
-                        }}
-                    >
-                        <Nav className="custom-nav full-width-nav" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-                            <Nav.Item className="nav-item-custom">
-                                <Nav.Link className="m-link-nav" eventKey="age">
-                                    연령별
-                                </Nav.Link>
-                            </Nav.Item>
-                            <div className="divider"></div>
-                            <Nav.Item className="nav-item-custom">
-                                <Nav.Link eventKey="gender">성별</Nav.Link>
-                            </Nav.Item>
-                            <div className="divider"></div>
-                            <Nav.Item className="nav-item-custom">
-                                <Nav.Link eventKey="review">리뷰별</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </div>
-                </Row>
-
-                {/* 카드 리스트 */}
-                <Row>
-                    {travelData[activeTab].map((item, index) => (
-                        <Col key={index} xs={12} sm={6} md={3} className="mb-4">
-                            <Card className="shadow-sm h-100 ai-card" onClick={() => navigate(`/Category/${item.store_idx}`)}>
-                                <Card.Img variant="top" src={item.img} alt={item.title} style={{ height: '200px', objectFit: 'cover' }} />
-                                <Card.Body>
-                                    <Card.Title className="fw-bold">{item.title}</Card.Title>
-                                    <Card.Text className="text-muted">{item.location}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+                <PersonalizedTravelList travelData={travelData} activeTab={activeTab} setActiveTab={setActiveTab} />
             </Container>
 
             <Container className="mt-4">
