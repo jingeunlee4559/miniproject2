@@ -19,7 +19,15 @@
     background-color: #1abc9c;
 }
 
-.nav-link {
+/* .nav-link {
+    position: relative;
+    padding-bottom: 0.5rem;
+    color: white;
+    overflow: hidden;
+    font-weight: bold;
+} */
+
+#basic-navbar-nav > .navbar-nav > .nav-link {
     position: relative;
     padding-bottom: 0.5rem;
     color: white;

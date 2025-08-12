@@ -23,6 +23,7 @@ import Schedule from '../components/Mypage/Schedule';
 import MainLayout from '../layouts/MainLayout.js';
 import Categorydetail from '../pages/Categorydetail.js';
 import Admin from '../pages/Admin.js';
+import FindIDPW from '../pages/FindIDPW.js';
 
 function Approutes() {
     return (
@@ -39,6 +40,7 @@ function Approutes() {
                 <Route path="/board/:board_seq" element={<DetailPage />} />
                 <Route path="/Category/:store_idx" element={<Categorydetail />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/FindIDPW" element={<FindIDPW />} />
             </Route>
 
             <Route element={<MainLayout />}>
