@@ -9,7 +9,7 @@ import CommentList from '../components/CommentList';
 
 const DetailPage = () => {
     const { board_seq } = useParams();
-    // const [boardDetail, setBoardDetail] = useState(null);
+    const [boardDetail, setBoardDetail] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedContent, setEditedContent] = useState('');
@@ -70,70 +70,70 @@ const DetailPage = () => {
         },
     ];
 
-    const boardDetail = mockData.find((item) => item.board_seq === parseInt(board_seq));
+    //const boardDetail = mockData.find((item) => item.board_seq === parseInt(board_seq));
 
-    // useEffect(() => {
-    //   const fetchBoardDetail = async () => {
-    //     try {
-    //       const response = await axios.get(`/board/${board_seq}`);
-    //       setBoardDetail(response.data);
-    //       setEditedTitle(response.data.title);
-    //       setEditedContent(response.data.content);
-    //       if (response.data.img) {
-    //         setPreviewImage(`http://localhost:8300${response.data.img}`);
-    //       }
-    //     } catch (error) {
-    //       console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
-    //     }
-    //   };
+    useEffect(() => {
+      const fetchBoardDetail = async () => {
+        try {
+          const response = await axios.get(`/api/board/${board_seq}`);
+          setBoardDetail(response.data);
+          setEditedTitle(response.data.title);
+          setEditedContent(response.data.content);
+          if (response.data.img) {
+            setPreviewImage(`http://localhost:8300${response.data.img}`);
+          }
+        } catch (error) {
+          console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
+        }
+      };
 
-    //   fetchBoardDetail();
-    // }, [board_seq]);
+      fetchBoardDetail();
+    }, [board_seq]);
 
-    // const handleEdit = () => {
-    //   setIsEditing(true);
-    // };
+    const handleEdit = () => {
+      setIsEditing(true);
+    };
 
-    // const handleSave = async () => {
-    //   const formData = new FormData();
-    //   formData.append("board_title", editedTitle);
-    //   formData.append("board_content", editedContent);
-    //   if (selectedFile) {
-    //     formData.append("board_img", selectedFile);
-    //   }
+    const handleSave = async () => {
+      const formData = new FormData();
+      formData.append("board_title", editedTitle);
+      formData.append("board_content", editedContent);
+      if (selectedFile) {
+        formData.append("board_img", selectedFile);
+      }
 
-    //   try {
-    //     const response = await axios.put(`/board/update/${board_seq}`, formData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     });
-    //     setIsEditing(false);
-    //     // 업데이트된 데이터를 상태에 반영
-    //     setBoardDetail({
-    //       ...boardDetail,
-    //       title: editedTitle,
-    //       content: editedContent,
-    //       img: response.data.img || boardDetail.img
-    //     });
-    //     // 이미지가 변경된 경우, 미리보기 이미지를 업데이트
-    //     if (response.data.img) {
-    //       setPreviewImage(`http://localhost:8300${response.data.img}?${new Date().getTime()}`);
-    //     }
-    //     Swal.fire({
-    //       icon: 'success',
-    //       text: '수정 성공!',
-    //       confirmButtonText: '확인'
-    //     });
-    //   } catch (error) {
-    //     console.error("게시글 수정 도중 오류 발생:", error);
-    //     Swal.fire({
-    //       icon: 'error',
-    //       text: '수정 도중 오류가 발생했습니다.',
-    //       confirmButtonText: '확인'
-    //     });
-    //   }
-    // };
+      try {
+        const response = await axios.put(`/board/update/${board_seq}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setIsEditing(false);
+        // 업데이트된 데이터를 상태에 반영
+        setBoardDetail({
+          ...boardDetail,
+          title: editedTitle,
+          content: editedContent,
+          img: response.data.img || boardDetail.img
+        });
+        // 이미지가 변경된 경우, 미리보기 이미지를 업데이트
+        if (response.data.img) {
+          setPreviewImage(`http://localhost:8300${response.data.img}?${new Date().getTime()}`);
+        }
+        Swal.fire({
+          icon: 'success',
+          text: '수정 성공!',
+          confirmButtonText: '확인'
+        });
+      } catch (error) {
+        console.error("게시글 수정 도중 오류 발생:", error);
+        Swal.fire({
+          icon: 'error',
+          text: '수정 도중 오류가 발생했습니다.',
+          confirmButtonText: '확인'
+        });
+      }
+    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -162,7 +162,7 @@ const DetailPage = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`/board/${board_seq}`);
+                    await axios.delete(`/api/board/${board_seq}`);
                     Swal.fire({
                         icon: 'success',
                         text: '삭제 성공!',
@@ -184,13 +184,13 @@ const DetailPage = () => {
 
     return (
         <>
-            <Row className="mt-5"></Row>
+            <Row className="mt-5 pt-5"></Row>
             <Container className="detail-container pt-5 mt-5">
-                {seq === '0' && !isEditing && (
+                {!isEditing && (
                     <Row className="button-group">
                         <Col>
-                            {/* <Button onClick={handleEdit} variant='warning' className="btn me-2"> */}
-                            <Button variant="warning" className="btn me-2"></Button>
+                            <Button onClick={handleEdit} variant='warning' className="btn me-2">수정</Button>
+                            {/* <Button variant="warning" className="btn me-2"></Button> */}
                             <Button onClick={deletepost} variant="danger" className="btn">
                                 삭제
                             </Button>
@@ -233,10 +233,10 @@ const DetailPage = () => {
                             <h3 className="detail-title">{boardDetail?.title}</h3>
                             <h3 className="detail-title">{boardDetail?.board_title}</h3>
                             <p className="detail-info">
-                                작성자: {boardDetail?.writer} | 날짜: {boardDetail?.board_at.substring(0, 10)} | 조회수: {boardDetail?.board_views}
+                                작성자: {boardDetail?.mem_id} | 날짜: {boardDetail?.board_at.substring(0, 10)} | 조회수: {boardDetail?.board_views}
                             </p>
                             <hr />
-                            <p className="detail-text">{boardDetail?.content}</p>
+                            <p className="detail-text">{boardDetail?.board_content}</p>
                             {boardDetail?.img && <img src={previewImage} alt="Board Detail" style={{ maxWidth: '100%' }} />}
                         </div>
                         <Row className="t2 mb-4 pt-5" id="detail">

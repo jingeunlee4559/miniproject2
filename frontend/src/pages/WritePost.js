@@ -33,7 +33,7 @@ const WritePost = () => {
         }
 
         try {
-            const response = await axios.post('/board/create', formData, {
+            const response = await axios.post('/api/board/create', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

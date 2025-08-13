@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.BoardMapper">
+
+<!-- BoardMapper.xml -->
+
+<select id="getAllBoards" resultType="com.example.backend.model.Board"> 
+    SELECT * 
+    FROM BOARD 
+    WHERE board_deleted = 0
+</select>
+
+<insert id="createBoard">
+INSERT INTO BOARD (
+    mem_id, board_title, board_content, original_fileName, stored_fileName
+) VALUES (
+    #{mem_id}, 
+    #{board_title}, 
+    #{board_content},   
+    #{original_fileName, jdbcType=VARCHAR},
+    #{stored_fileName, jdbcType=VARCHAR}
+)
+</insert>
+
+<update id="deleteBoard" parameterType="long">
+    UPDATE BOARD
+    SET board_deleted = 1
+    WHERE board_seq = #{board_seq}
+</update>
+
+<select id="findBoardBySeq" parameterType="long" resultType="com.example.backend.model.Board">
+    SELECT board_seq, mem_id, board_title, board_content, board_at, board_views
+    FROM BOARD
+    WHERE board_seq = #{board_seq}
+</select>
+
+<update id="incrementViewCount" parameterType="long">
+    UPDATE BOARD 
+    SET board_views = board_views + 1 
+    WHERE board_seq = #{board_seq}
+</update>
+
+</mapper>
