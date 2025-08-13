@@ -17,97 +17,219 @@ function Home() {
     useEffect(() => {
         AOS.init();
     }, []);
-
     const travelData = {
-        // TOP4 인기 여행지 (고정)
         popular: [
             {
+                store_idx: 1,
                 img: '/img/travel1234.png',
                 title: '오무아무아',
                 location: '충청북도 단양군',
+                age: '30대',
+                gender: '여성',
             },
             {
+                store_idx: 2,
                 img: '/img/travel1234.png',
                 title: '해운대',
                 location: '부산광역시',
+                age: '20대',
+                gender: '남성',
             },
             {
+                store_idx: 3,
                 img: '/img/travel1234.png',
                 title: '경주 불국사',
                 location: '경상북도 경주시',
+                age: '40대',
+                gender: '남성',
             },
             {
+                store_idx: 4,
                 img: '/img/travel1234.png',
                 title: '에버랜드',
                 location: '경기도 용인시',
+                age: '50대 이상',
+                gender: '여성',
             },
         ],
 
-        // 네비게이션용 데이터
         age: [
             {
+                store_idx: 1,
                 img: '/img/travel1234.png',
                 title: '오무아무아',
                 location: '충청북도 단양군',
+                age: '30대',
+                gender: '남성',
             },
             {
+                store_idx: 5,
                 img: '/img/travel1234.png',
                 title: '거창 항노화',
                 location: '경상남도 거창군',
+                age: '30대',
+                gender: '여성',
             },
             {
+                store_idx: 6,
                 img: '/img/travel1234.png',
                 title: '대야산',
                 location: '경상북도 문경시',
+                age: '10대',
+                gender: '남성',
             },
             {
+                store_idx: 4,
                 img: '/img/travel1234.png',
                 title: '에버랜드',
                 location: '경기도 용인시',
+                age: '50대 이상',
+                gender: '여성',
             },
         ],
+
         gender: [
             {
+                store_idx: 2,
                 img: '/img/travel1234.png',
                 title: '해운대',
                 location: '부산광역시',
+                age: '20대',
+                gender: '여성',
             },
             {
+                store_idx: 7,
                 img: '/img/travel1234.png',
                 title: '남산타워',
                 location: '서울특별시',
+                age: '40대',
+                gender: '남성',
             },
             {
+                store_idx: 8,
                 img: '/img/travel1234.png',
                 title: '성산일출봉',
                 location: '제주도',
+                age: '20대',
+                gender: '여성',
             },
             {
+                store_idx: 6,
                 img: '/img/travel1234.png',
                 title: '대야산',
                 location: '경상북도 문경시',
+                age: '10대',
+                gender: '남성',
             },
         ],
+
         review: [
             {
+                store_idx: 3,
                 img: '/img/travel1234.png',
                 title: '경주 불국사',
                 location: '경상북도 경주시',
+                age: '40대',
+                gender: '남성',
             },
             {
+                store_idx: 9,
                 img: '/img/travel1234.png',
                 title: '전주 한옥마을',
                 location: '전라북도 전주시',
+                age: '30대',
+                gender: '여성',
             },
             {
+                store_idx: 6,
                 img: '/img/travel1234.png',
                 title: '대야산',
                 location: '경상북도 문경시',
+                age: '10대',
+                gender: '남성',
             },
             {
+                store_idx: 6,
                 img: '/img/travel1234.png',
                 title: '대야산',
                 location: '경상북도 문경시',
+                age: '10대',
+                gender: '남성',
+            },
+        ],
+
+        all: [
+            {
+                store_idx: 1,
+                img: '/img/travel1234.png',
+                title: '오무아무아',
+                location: '충청북도 단양군',
+                age: '30대',
+                gender: '여성', // popular 배열 기준 또는 age 배열과 다를 경우 우선 popular 우선 적용 가능
+            },
+            {
+                store_idx: 2,
+                img: '/img/travel1234.png',
+                title: '해운대',
+                location: '부산광역시',
+                age: '20대',
+                gender: '남성', // popular 배열 기준
+            },
+            {
+                store_idx: 3,
+                img: '/img/travel1234.png',
+                title: '경주 불국사',
+                location: '경상북도 경주시',
+                age: '40대',
+                gender: '남성',
+            },
+            {
+                store_idx: 4,
+                img: '/img/travel1234.png',
+                title: '에버랜드',
+                location: '경기도 용인시',
+                age: '50대 이상',
+                gender: '여성',
+            },
+            {
+                store_idx: 5,
+                img: '/img/travel1234.png',
+                title: '거창 항노화',
+                location: '경상남도 거창군',
+                age: '30대',
+                gender: '여성',
+            },
+            {
+                store_idx: 6,
+                img: '/img/travel1234.png',
+                title: '대야산',
+                location: '경상북도 문경시',
+                age: '10대',
+                gender: '남성',
+            },
+            {
+                store_idx: 7,
+                img: '/img/travel1234.png',
+                title: '남산타워',
+                location: '서울특별시',
+                age: '40대',
+                gender: '남성',
+            },
+            {
+                store_idx: 8,
+                img: '/img/travel1234.png',
+                title: '성산일출봉',
+                location: '제주도',
+                age: '20대',
+                gender: '여성',
+            },
+            {
+                store_idx: 9,
+                img: '/img/travel1234.png',
+                title: '전주 한옥마을',
+                location: '전라북도 전주시',
+                age: '30대',
+                gender: '여성',
             },
         ],
     };

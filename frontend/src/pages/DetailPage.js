@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import '../css/DetailPage.css'; // CSS 파일에서 스타일을 정의합니다.
-import { Row, Button, Form, Col } from 'react-bootstrap';
+import { Row, Button, Form, Col, Container } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+import CommentForm from '../components/CommentForm';
+import CommentList from '../components/CommentList';
 
 const DetailPage = () => {
     const { board_seq } = useParams();
@@ -15,9 +17,41 @@ const DetailPage = () => {
     const [previewImage, setPreviewImage] = useState('');
     const navigate = useNavigate();
     const seq = window.sessionStorage.getItem('mem_seq');
+    const [comments, setComments] = useState([
+        {
+            name: '여행러버',
+            text: '정말 힐링되는 여행지였어요 🌿',
+            date: '2025-08-13',
+            avatar: '/img/user1.png',
+        },
+        {
+            name: '맛집탐험가',
+            text: '근처 맛집 추천 부탁드려요 😋',
+            date: '2025-08-12',
+            avatar: '/img/user2.png',
+        },
+    ]);
+
+    const addComment = (text) => {
+        const newComment = {
+            name: '익명',
+            text,
+            date: new Date().toISOString().split('T')[0],
+            avatar: '/img/default-avatar.png',
+        };
+        setComments([newComment, ...comments]);
+    };
 
     const mockData = [
-        { board_seq: 1, board_title: '제주도 3박 4일 여행 코스 추천', board_at: '2025-08-01T12:00:00', board_views: 320, writer: '여행러버', content: '제주도 여행 3박 4일 추천 코스는...' },
+        {
+            board_seq: 1,
+            board_title: '제주도 3박 4일 여행 코스 추천',
+            board_at: '2025-08-01T12:00:00',
+            board_views: 320,
+            writer: '여행러버',
+            content:
+                '제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...',
+        },
         { board_seq: 2, board_title: '부산 여행 꿀팁 총정리', board_at: '2025-08-02T09:30:00', board_views: 280, writer: '부산토박이', content: '부산에서 꼭 가봐야 할 곳은...' },
         { board_seq: 3, board_title: '강릉 바다뷰 카페 BEST 5', board_at: '2025-08-03T14:20:00', board_views: 210, writer: '카페헌터', content: '강릉 바다뷰 카페 추천 리스트...' },
         { board_seq: 4, board_title: '서울 근교 당일치기 여행지 추천', board_at: '2025-08-04T10:15:00', board_views: 350, writer: '나들이왕', content: '서울 근교에서 당일치기로 가볼 만한 곳은...' },
@@ -151,53 +185,52 @@ const DetailPage = () => {
     return (
         <>
             <Row className="mt-5"></Row>
-            <div className="my-5">
-                <Row className="mt-5"></Row>
-                <div className="detail-container my-5">
-                    {seq === '0' && !isEditing && (
-                        <Row className="button-group">
-                            <Col>
-                                {/* <Button onClick={handleEdit} variant='warning' className="btn me-2"> */}
-                                <Button variant="warning" className="btn me-2"></Button>
-                                <Button onClick={deletepost} variant="danger" className="btn">
-                                    삭제
-                                </Button>
-                            </Col>
-                        </Row>
-                    )}
-                    {isEditing ? (
-                        <div className="detail-content">
-                            <Form.Group controlId="formTitle" className="title">
-                                <Form.Label>제목</Form.Label>
-                                <Form.Control type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} placeholder="제목을 입력하세요" />
-                            </Form.Group>
-                            <Form.Group controlId="formContent" className="content">
-                                <Form.Label>내용</Form.Label>
-                                <Form.Control as="textarea" rows={10} value={editedContent} onChange={(e) => setEditedContent(e.target.value)} placeholder="내용을 입력하세요" />
-                            </Form.Group>
-                            <Form.Group controlId="formFile" className="file">
-                                <Form.Label>이미지 파일</Form.Label>
-                                <Button variant="primary" onClick={triggerFileInput} className="custom-select-button">
-                                    이미지 선택
-                                </Button>
-                                <input id="imageInput" type="file" className="hidden-file-input" style={{ display: 'none' }} onChange={handleFileChange} />
-                                {previewImage && (
-                                    <div className="image-preview">
-                                        <img src={previewImage} alt="미리보기" style={{ maxWidth: '100%', marginTop: '10px' }} />
-                                        <Button variant="danger" onClick={handleRemoveImage} style={{ marginTop: '10px' }}>
-                                            이미지 제거
-                                        </Button>
-                                    </div>
-                                )}
-                            </Form.Group>
-                            {/* <Button onClick={handleSave} variant="success" className="mt-3"> */}
-                            <Button variant="success" className="mt-3">
-                                저장
+            <Container className="detail-container pt-5 mt-5">
+                {seq === '0' && !isEditing && (
+                    <Row className="button-group">
+                        <Col>
+                            {/* <Button onClick={handleEdit} variant='warning' className="btn me-2"> */}
+                            <Button variant="warning" className="btn me-2"></Button>
+                            <Button onClick={deletepost} variant="danger" className="btn">
+                                삭제
                             </Button>
-                        </div>
-                    ) : (
+                        </Col>
+                    </Row>
+                )}
+                {isEditing ? (
+                    <div className="detail-content">
+                        <Form.Group controlId="formTitle" className="title">
+                            <Form.Label>제목</Form.Label>
+                            <Form.Control type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} placeholder="제목을 입력하세요" />
+                        </Form.Group>
+                        <Form.Group controlId="formContent" className="content">
+                            <Form.Label>내용</Form.Label>
+                            <Form.Control as="textarea" rows={10} value={editedContent} onChange={(e) => setEditedContent(e.target.value)} placeholder="내용을 입력하세요" />
+                        </Form.Group>
+                        <Form.Group controlId="formFile" className="file">
+                            <Form.Label>이미지 파일</Form.Label>
+                            <Button variant="primary" onClick={triggerFileInput} className="custom-select-button">
+                                이미지 선택
+                            </Button>
+                            <input id="imageInput" type="file" className="hidden-file-input" style={{ display: 'none' }} onChange={handleFileChange} />
+                            {previewImage && (
+                                <div className="image-preview">
+                                    <img src={previewImage} alt="미리보기" style={{ maxWidth: '100%', marginTop: '10px' }} />
+                                    <Button variant="danger" onClick={handleRemoveImage} style={{ marginTop: '10px' }}>
+                                        이미지 제거
+                                    </Button>
+                                </div>
+                            )}
+                        </Form.Group>
+                        {/* <Button onClick={handleSave} variant="success" className="mt-3"> */}
+                        <Button variant="success" className="mt-3">
+                            저장
+                        </Button>
+                    </div>
+                ) : (
+                    <>
                         <div className="detail-content">
-                            {/* <h3 className="detail-title">{boardDetail?.title}</h3> */}
+                            <h3 className="detail-title">{boardDetail?.title}</h3>
                             <h3 className="detail-title">{boardDetail?.board_title}</h3>
                             <p className="detail-info">
                                 작성자: {boardDetail?.writer} | 날짜: {boardDetail?.board_at.substring(0, 10)} | 조회수: {boardDetail?.board_views}
@@ -206,9 +239,22 @@ const DetailPage = () => {
                             <p className="detail-text">{boardDetail?.content}</p>
                             {boardDetail?.img && <img src={previewImage} alt="Board Detail" style={{ maxWidth: '100%' }} />}
                         </div>
-                    )}
-                </div>
-            </div>
+                        <Row className="t2 mb-4 pt-5" id="detail">
+                            <Col xs="auto">
+                                댓글 <span style={{ color: '#6DD2FF' }}>({comments.length}개)</span>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <CommentForm onSubmit={addComment} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <CommentList comments={comments} />
+                        </Row>
+                    </>
+                )}
+            </Container>
         </>
     );
 };

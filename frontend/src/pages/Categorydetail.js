@@ -3,9 +3,35 @@ import { Col, Container, Row } from 'react-bootstrap';
 import Carousel3 from '../components/Carousel3';
 import Map from '../components/Map';
 import InfoSection from '../components/InfoSection';
+import CommentForm from '../components/CommentForm';
+import CommentList from '../components/CommentList';
 
 function Categorydetail() {
     const [expanded, setExpanded] = useState(false);
+    const [comments, setComments] = useState([
+        {
+            name: '여행러버',
+            text: '정말 힐링되는 여행지였어요 🌿',
+            date: '2025-08-13',
+            avatar: '/img/user1.png',
+        },
+        {
+            name: '맛집탐험가',
+            text: '근처 맛집 추천 부탁드려요 😋',
+            date: '2025-08-12',
+            avatar: '/img/user2.png',
+        },
+    ]);
+
+    const addComment = (text) => {
+        const newComment = {
+            name: '익명',
+            text,
+            date: new Date().toISOString().split('T')[0],
+            avatar: '/img/default-avatar.png',
+        };
+        setComments([newComment, ...comments]);
+    };
 
     const toggleContent = () => setExpanded(!expanded);
 
@@ -52,7 +78,7 @@ function Categorydetail() {
                 </Row>
 
                 {/* 상세정보 타이틀 */}
-                <Row className="t2 mb-4" id="detail">
+                <Row className="t2 mb-4 pt-5" id="detail">
                     <Col
                         // xs="auto"
                         style={{
@@ -110,6 +136,26 @@ function Categorydetail() {
                     <Col>
                         <InfoSection />
                     </Col>
+                </Row>
+                <Row className="t2 mb-4 pt-5" id="detail">
+                    <Col
+                        style={{
+                            fontWeight: 'inherit',
+                            fontSize: '1.8rem',
+                            borderBottom: '2px solid #6DD2FF',
+                            paddingBottom: '4px',
+                        }}
+                    >
+                        댓글 <span style={{ color: '#6DD2FF' }}>({comments.length}개)</span>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <CommentForm onSubmit={addComment} />
+                    </Col>
+                </Row>
+                <Row>
+                    <CommentList comments={comments} />
                 </Row>
             </Container>
         </>

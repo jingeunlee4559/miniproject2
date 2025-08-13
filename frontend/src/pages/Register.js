@@ -17,6 +17,7 @@ function Register() {
         mem_birth: '',
         mem_phone: '',
         mem_email: '',
+        mem_gender: '',
     });
 
     const [isIdValid, setIsIdValid] = useState(false);
@@ -140,6 +141,7 @@ function Register() {
             mem_birth: formData.mem_birth,
             mem_phone: formData.mem_phone,
             mem_email: formData.mem_email,
+            mem_gender: formData.mem_gender,
         };
 
         try {
@@ -212,6 +214,33 @@ function Register() {
                                         <FontAwesomeIcon icon={faCalendar} />
                                     </InputGroup.Text>
                                     <Form.Control type="date" name="mem_birth" value={formData.mem_birth} onChange={handleInputChange} />
+                                </InputGroup>
+
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Text>
+                                        <FontAwesomeIcon icon={faUser} />
+                                    </InputGroup.Text>
+                                    <div className="d-flex align-items-center mx-auto">
+                                        <Form.Check
+                                            type="radio"
+                                            label="남성"
+                                            name="mem_gender"
+                                            value="man"
+                                            checked={formData.mem_gender === 'man'}
+                                            onChange={handleInputChange}
+                                            onBlur={handleBlur}
+                                            className="me-3"
+                                        />
+                                        <Form.Check
+                                            type="radio"
+                                            label="여성"
+                                            name="mem_gender"
+                                            value="woman"
+                                            checked={formData.mem_gender === 'woman'}
+                                            onChange={handleInputChange}
+                                            onBlur={handleBlur}
+                                        />
+                                    </div>
                                 </InputGroup>
 
                                 <InputGroup className="mb-3">
