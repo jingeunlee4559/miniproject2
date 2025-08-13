@@ -8,14 +8,15 @@
 <!-- MemberMapper.xml -->
 <insert id="registerMember">
 INSERT INTO MEMBER (
-    mem_id, mem_pw, mem_name, mem_birth, mem_phone, mem_role, mem_status, mem_email
+    mem_id, mem_pw, mem_name, mem_birth, mem_phone, mem_role, mem_status, mem_email, mem_gender
 ) VALUES (
     #{mem_id}, #{mem_pw}, #{mem_name},
     TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
     #{mem_phone},
     #{mem_role},
     #{mem_status},
-    #{mem_email}
+    #{mem_email},
+    #{mem_gender}
 )
 </insert>
 
@@ -59,7 +60,7 @@ INSERT INTO MEMBER (
     </select>
 
 <select id="findById" parameterType="string" resultType="com.example.backend.model.Member">
-    SELECT mem_id, mem_pw, mem_name, mem_phone, mem_email, mem_role, mem_status
+    SELECT mem_id, mem_pw, mem_name, mem_phone, mem_email, mem_role, mem_status, mem_gender
     FROM MEMBER
     WHERE mem_id = #{mem_id}
 </select>

@@ -21,6 +21,7 @@ public class Member {
     private MemberStatus mem_status;
     private String joined_at;
     private String mem_email;
+    private String mem_gender;
 
       // 필요한 다른 속성들을 추가할 수 있습니다.
       public Member(String mem_id, String mem_pw){
