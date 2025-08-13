@@ -202,21 +202,22 @@ const Admin = () => {
                 <Paginated
                     data={members.slice((currentMemberPage - 1) * ITEMS_PER_PAGE, currentMemberPage * ITEMS_PER_PAGE).map((member) => ({
                         id: member.mem_id,
-                        status: member.mem_role === 'ADMIN' ? '관리자' : member.mem_role === 'USER' ? '일반 회원' : '정지 회원',
-                        mem_status: member.mem_status, // 버튼 조건 확인용
+                        status: member.mem_role === 'ADMIN' ? '관리자' : '일반 회원',
+                        mem_status: member.mem_status, // 'ACTIVE', 'SUSPENDED', 'WITHDRAWN'
+                        displayStatus: member.mem_status === 'ACTIVE' ? '활성화' : member.mem_status === 'SUSPENDED' ? '정지' : member.mem_status === 'WITHDRAWN' ? '탈퇴' : '알 수 없음',
                     }))}
                     columns={[
                         { accessor: 'id', Header: 'ID' },
-                        { accessor: 'status', Header: '상태' },
+                        { accessor: 'status', Header: '역할' },
+                        { accessor: 'displayStatus', Header: '상태' },
                         {
                             accessor: 'actions',
                             Header: '관리',
                             Cell: ({ row }) => {
                                 const { id, mem_status } = row.original;
 
-                                if (mem_status === 0) return null;
+                                if (mem_status === 'WITHDRAWN') return null; // 탈퇴 회원은 관리 불가
 
-                                // 일반 회원 (1) -> 정지 버튼
                                 if (mem_status === 'ACTIVE') {
                                     return (
                                         <Button size="sm" variant="danger" onClick={() => suspendMember(id)}>
@@ -225,8 +226,7 @@ const Admin = () => {
                                     );
                                 }
 
-                                // 정지 회원  → 해제 버튼
-                                if (mem_status !== 'ACTIVE') {
+                                if (mem_status === 'SUSPENDED') {
                                     return (
                                         <Button size="sm" variant="success" onClick={() => unsuspendMember(id)}>
                                             해제
@@ -239,6 +239,7 @@ const Admin = () => {
                         },
                     ]}
                 />
+
                 <Row className="mt-4 pt-5">
                     <Col>
                         <h2>게시글 관리</h2>
