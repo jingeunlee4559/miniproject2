@@ -32,18 +32,12 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/all")
-    public List<Member> getAllMembers() {
-        return memberService.getAllMembers();
-
-    }
-
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Member member, HttpServletRequest request) {
         try {
             Member loginUser = memberService.login(member.getMem_id(), member.getMem_pw());
-            
+
             loginUser.setMem_pw(null); // 비밀번호는 응답에서 제거
 
             HttpSession session = request.getSession();
@@ -58,8 +52,8 @@ public class MemberController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?>  logout(HttpSession session) {
-        
+    public ResponseEntity<?> logout(HttpSession session) {
+
         session.invalidate();
 
         return ResponseEntity.ok("로그아웃 되었습니다.");
@@ -152,9 +146,23 @@ public class MemberController {
         }
     }
 
+
+
+    // 전체 사용자 목록
+    @GetMapping("/members")
+    public ResponseEntity<?> getAllMembers() {
+        try {
+            List<Member> memberList = memberService.getAllMembers();
+            return ResponseEntity.ok(memberList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(false);
+        }
+    }
+
     // 사용자 정보 조회
-    @GetMapping("/users/{mem_id}")
-    public ResponseEntity<?> getUserProfile(@PathVariable String mem_id) {
+    @GetMapping("/members/{mem_id}")
+    public ResponseEntity<?> getMemberProfile(@PathVariable String mem_id) {
         try {
             Member user = memberService.getMember(mem_id);
             return ResponseEntity.ok(user);
@@ -165,13 +173,35 @@ public class MemberController {
     }
 
     // 사용자 정보 수정
-    @PutMapping("/users/{mem_id}")
-    public ResponseEntity<?> updateUserProfile(@PathVariable String mem_id, @RequestBody Member member) {
+    @PutMapping("/members/{mem_id}")
+    public ResponseEntity<?> updateMemberProfile(@PathVariable String mem_id, @RequestBody Member member) {
         try {
             member.setMem_id(mem_id);
 
             memberService.updateMember(member);
             return ResponseEntity.ok("정보 변경에 성공하였습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(false);
+        }
+    }
+
+    @PutMapping("/members/{mem_id}/suspend")
+    public ResponseEntity<?> suspendMember(@PathVariable String mem_id) {
+        try {
+            memberService.suspendMember(mem_id);
+            return ResponseEntity.ok("정지에 성공하였습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(false);
+        }
+    }
+
+    @PutMapping("/members/{mem_id}/unsuspend")
+    public ResponseEntity<?> unsuspendMember(@PathVariable String mem_id) {
+        try {
+            memberService.unsuspendMember(mem_id);
+            return ResponseEntity.ok("정지 해제에 성공하였습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(false);
