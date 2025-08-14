@@ -13,13 +13,14 @@ function Board() {
     let seq = window.sessionStorage.getItem('mem_seq');
 
     useEffect(() => {
-        axios.get("/api/board/all")
+        axios
+            .get('/api/board/all')
             .then((res) => {
-                console.log("게시판 데이터", res.data);
+                console.log('게시판 데이터', res.data);
                 setData(res.data);
             })
             .catch(() => {
-                console.log("데이터 가져오기 실패");
+                console.log('데이터 가져오기 실패');
             });
     }, []);
 
@@ -56,7 +57,7 @@ function Board() {
             <Container className="my-5">
                 <Row className="my-3">
                     <Col className="d-flex justify-content-left">
-                        <h3>게시판</h3>
+                        <h3>커뮤니티</h3>
                     </Col>
                 </Row>
                 <Row className="mt-3 mt-md-0">

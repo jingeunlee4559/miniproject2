@@ -79,7 +79,7 @@ function Login() {
                         <Row className="justify-content-md-center">
                             <Col lg={8} md={12} sm={12} className="login-form-container">
                                 <div className="text-center mt-2">
-                                    <img src="/img/wdp_log2.png" alt="Read Fit 로고" className="login-logo" />
+                                    <img src="/img/logo/plogo5.png" alt="Read Fit 로고" className="login-logo" />
                                 </div>
 
                                 <Form onSubmit={handleLogin}>

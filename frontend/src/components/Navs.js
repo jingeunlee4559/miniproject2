@@ -65,14 +65,14 @@ function Navs() {
                     {' '}
                     {/* Changed maxWidth to 100% */}
                     <Navbar.Brand onClick={() => navigateTo('/')}>
-                        <img src="img/WDP_b.png" alt="로고" className="navbar-logo" />
+                        <img src="img/logo/plogo4.png" alt="로고" className="logo5" />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : true)} />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto justify-content-center">
                             <Nav.Link onClick={() => navigateTo('/Aichoice')}>Ai추천</Nav.Link>
                             {/* <Nav.Link onClick={() => navigateTo('/')}>홈</Nav.Link> */}
-                            <Nav.Link onClick={() => navigateTo('/Board')}>게시판</Nav.Link>
+                            <Nav.Link onClick={() => navigateTo('/Board')}>커뮤니티</Nav.Link>
                             <Nav.Link onClick={() => navigateTo('/Category')}>여행지</Nav.Link>
                         </Nav>
                         <Nav className="align-items-center">

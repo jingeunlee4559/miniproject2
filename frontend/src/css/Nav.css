@@ -92,13 +92,13 @@
 .navbar-toggler {
     margin-left: auto;
 }
-
+/* 
 .navbar-logo {
-    width: 1000px;
-    height: 1000px;
+    width: 30px;
+    height: 30px;
     margin: 0;
     padding: 0;
-}
+} */
 
 @media (max-width: 992px) {
     .navbar-nav .nav-link::after {
