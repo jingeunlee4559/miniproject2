@@ -12,6 +12,7 @@ import com.example.backend.dto.request.*;
 import com.example.backend.dto.response.*;
 import com.example.backend.mapper.BoardMapper;
 import com.example.backend.model.Board;
+import com.example.backend.model.MemberRole;
 
 @Service
 public class BoardService {
@@ -45,7 +46,7 @@ public class BoardService {
         }
         
         if (board_img != null) {
-            // 이미지 저장 처리
+            // TODO : 이미지 저장 처리
         }
 
         boardMapper.updateBoard(board);
@@ -55,10 +56,37 @@ public class BoardService {
         boardMapper.deleteBoard(boardSeq);
     }
 
-    public BoardDetailResponseDTO getBoard(Long boardSeq) {
+    public BoardDetailResponseDTO getBoard(Long boardSeq, MemberInfoResponseDTO loginMember) {
         Board board = boardMapper.findBoardBySeq(boardSeq);
+
+        if (board == null){
+            throw new RuntimeException("게시글을 찾을수 없습니다");
+        }
+        
         boardMapper.incrementViewCount(boardSeq);
-        return BoardDetailResponseDTO.from(board);
+
+        BoardDetailResponseDTO responseDTO = BoardDetailResponseDTO.from(board);
+
+        boolean isEditable = false;
+        boolean isDeletable = false;
+
+        if (loginMember != null) {
+            // 작성자 본인 확인
+            if (board.getMem_id() == loginMember.getMem_id()) {
+                isEditable = true;
+                isDeletable = true;
+            }
+
+            // 로그인멤버 권한 확인
+            if (loginMember.getMem_role() == MemberRole.ADMIN) {
+                isDeletable = true;
+            }
+        }
+
+        responseDTO.setEditable(isEditable);
+        responseDTO.setDeletable(isDeletable);
+
+        return responseDTO;
     }
 
     public List<BoardListResponseDTO> getAllBoards() {

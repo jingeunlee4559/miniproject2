@@ -49,9 +49,10 @@ public class BoardController {
 
     // 게시글 상세 조회
     @GetMapping("/{boardSeq}")
-    public ResponseEntity<?> getPost(@PathVariable Long boardSeq) {
+    public ResponseEntity<?> getPost(@PathVariable Long boardSeq, HttpSession session) {
         // 게시글 상세 조회 로직
-        return ResponseEntity.ok(boardService.getBoard(boardSeq));
+        MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO)session.getAttribute("loginMember");
+        return ResponseEntity.ok(boardService.getBoard(boardSeq, loginMember));
     }
 
     // 게시글 삭제
