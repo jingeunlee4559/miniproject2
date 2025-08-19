@@ -15,6 +15,7 @@ public class BoardDetailResponseDTO {
     private String mem_id;
     private LocalDateTime create_at;
     private LocalDateTime update_at;
+    private Integer board_views;
     private String imageUrl;
 
     // 현재 사용자의 권한 정보
@@ -29,6 +30,7 @@ public class BoardDetailResponseDTO {
         dto.setMem_id(board.getMem_id());
         dto.setCreate_at(board.getCreate_at());
         dto.setUpdate_at(board.getUpdate_at());
+        dto.setBoard_views(board.getBoard_views());
         dto.setImageUrl(board.getStored_fileName());
         return dto;
     }
