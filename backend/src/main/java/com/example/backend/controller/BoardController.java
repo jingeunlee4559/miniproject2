@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.model.Board;
-import com.example.backend.model.Member;
+import com.example.backend.dto.request.*;
+import com.example.backend.dto.response.*;
 import com.example.backend.service.BoardService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,15 +30,16 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    // 게시글 생성
     @PostMapping("/create")
     public ResponseEntity<?> createBoard(
-            @ModelAttribute Board board,
+            @ModelAttribute BoardCreateRequestDTO requestDTO,
             @RequestParam(required = false) MultipartFile board_img,
             HttpSession session) {
 
         try {
-            Member member = (Member)session.getAttribute("loginMember");
-            boardService.createBoard(board, board_img, member.getMem_id());
+            MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO)session.getAttribute("loginMember");
+            boardService.createBoard(requestDTO, board_img, loginMember.getMem_id());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,19 +47,32 @@ public class BoardController {
         }
     }
 
+    // 게시글 상세 조회
     @GetMapping("/{boardSeq}")
     public ResponseEntity<?> getPost(@PathVariable Long boardSeq) {
         // 게시글 상세 조회 로직
         return ResponseEntity.ok(boardService.getBoard(boardSeq));
     }
 
+    // 게시글 삭제
     @DeleteMapping("/{boardSeq}")
     public ResponseEntity<Void> deletePost(@PathVariable Long boardSeq) {
-        // 게시글 삭제 로직
         boardService.deleteBoard(boardSeq);
         return ResponseEntity.noContent().build();
     }
 
+    // 게시글 수정
+    @PutMapping("/{boardSeq}")
+    public ResponseEntity<Void> updatePost(
+            @PathVariable Long boardSeq,
+            @ModelAttribute BoardUpdateRequestDTO requestDTO,
+            @RequestParam(required = false) MultipartFile board_img,
+            HttpSession session) {
+        boardService.updateBoard(boardSeq, requestDTO, board_img);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // 게시글 전체 목록 조회
     @GetMapping("/all")
         public ResponseEntity<?> getBoardList() {
 

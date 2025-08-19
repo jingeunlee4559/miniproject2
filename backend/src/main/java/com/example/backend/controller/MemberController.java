@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.request.MemberLoginRequestDTO;
+import com.example.backend.dto.request.MemberRegisterRequestDTO;
+import com.example.backend.dto.request.MemberUpdateRequestDTO;
+import com.example.backend.dto.request.PasswordVerifyRequestDTO;
+import com.example.backend.dto.response.MemberInfoResponseDTO;
 import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;
 import com.example.backend.service.MemberService;
@@ -34,16 +39,14 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO requestDTO, HttpServletRequest request) {
         try {
-            Member loginUser = memberService.login(member.getMem_id(), member.getMem_pw());
-
-            loginUser.setMem_pw(null); // 비밀번호는 응답에서 제거
+            MemberInfoResponseDTO responseDTO = memberService.login(requestDTO);
 
             HttpSession session = request.getSession();
-            session.setAttribute("loginMember", loginUser);
+            session.setAttribute("loginMember", responseDTO);
 
-            return ResponseEntity.ok(loginUser);
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -61,9 +64,10 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("/register")
-    public ResponseEntity<?> registerMember(@RequestBody Member member) {
+    public ResponseEntity<?> registerMember(@RequestBody MemberRegisterRequestDTO requestDTO) {
         try {
-            memberService.registerMember(member);
+            System.out.println("넘어온 생년월일 값: " + requestDTO.getMem_birth());
+            memberService.registerMember(requestDTO);
             return ResponseEntity.ok("회원가입에 성공하였습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,9 +92,9 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity<?> getMyProfile(HttpSession session) {
         try {
-            Member myProfile = (Member) session.getAttribute("loginMember");
+            MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO)session.getAttribute("loginMember");
 
-            return ResponseEntity.ok(myProfile);
+            return ResponseEntity.ok(loginMember);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(false);
@@ -99,13 +103,11 @@ public class MemberController {
 
     // 내 정보 수정
     @PutMapping("/me")
-    public ResponseEntity<?> updateMyProfile(HttpSession session, @RequestBody Member member) {
+    public ResponseEntity<?> updateMyProfile(HttpSession session, @RequestBody MemberUpdateRequestDTO requestDTO) {
         try {
-            Member myProfile = (Member) session.getAttribute("loginMember");
+            MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO)session.getAttribute("loginMember");
 
-            member.setMem_id(myProfile.getMem_id());
-
-            memberService.updateMember(member);
+            memberService.updateMember(loginMember.getMem_id(), requestDTO);
             return ResponseEntity.ok("정보 변경에 성공하였습니다.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,11 +119,11 @@ public class MemberController {
     @DeleteMapping("/me")
     public ResponseEntity<?> withdrawMyAccount(HttpSession session) {
         try {
-            Member member = (Member) session.getAttribute("loginMember");
+            MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");
 
-            System.out.println("탈퇴할 멤버 아이디: " + member.getMem_id());
+            System.out.println("탈퇴할 멤버 아이디: " + loginMember.getMem_id());
 
-            memberService.withdrawMember(member.getMem_id());
+            memberService.withdrawMember(loginMember.getMem_id());
             session.invalidate();
             return ResponseEntity.ok("회원탈퇴에 성공하였습니다.");
         } catch (Exception e) {
@@ -132,13 +134,15 @@ public class MemberController {
 
     // 비밀번호 확인
     @PostMapping("/me/password/verify")
-    public ResponseEntity<?> verifyMyPassword(HttpSession session, @RequestBody String rawPassword) {
+    public ResponseEntity<?> verifyMyPassword(HttpSession session, @RequestBody PasswordVerifyRequestDTO requestDTO) {
         try {
-            Member member = (Member) session.getAttribute("loginMember");
-            String mem_id = member.getMem_id();
+            System.out.println("입력 비밀번호 "+ requestDTO.getPassword());
+            
+            MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");
+            
+            boolean available = memberService.verifyPassword(loginMember.getMem_id(), requestDTO.getPassword());
+            System.out.println("verifyMyPassword 호출, mem_id=" + loginMember.getMem_id() + ", 사용 가능 여부=" + available);
 
-            boolean available = memberService.verifyPassword(mem_id, rawPassword);
-            System.out.println("verifyMyPassword 호출, mem_id=" + mem_id + ", 사용 가능 여부=" + available);
             return ResponseEntity.ok(available);
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,7 +156,7 @@ public class MemberController {
     @GetMapping("/members")
     public ResponseEntity<?> getAllMembers() {
         try {
-            List<Member> memberList = memberService.getAllMembers();
+            List<MemberInfoResponseDTO> memberList = memberService.getAllMembers();
             return ResponseEntity.ok(memberList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,8 +168,8 @@ public class MemberController {
     @GetMapping("/members/{mem_id}")
     public ResponseEntity<?> getMemberProfile(@PathVariable String mem_id) {
         try {
-            Member user = memberService.getMember(mem_id);
-            return ResponseEntity.ok(user);
+            MemberInfoResponseDTO responseDTO = memberService.getMember(mem_id);
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(false);
@@ -174,11 +178,9 @@ public class MemberController {
 
     // 사용자 정보 수정
     @PutMapping("/members/{mem_id}")
-    public ResponseEntity<?> updateMemberProfile(@PathVariable String mem_id, @RequestBody Member member) {
+    public ResponseEntity<?> updateMemberProfile(@PathVariable String mem_id, @RequestBody MemberUpdateRequestDTO requestDTO) {
         try {
-            member.setMem_id(mem_id);
-
-            memberService.updateMember(member);
+            memberService.updateMember(mem_id, requestDTO);
             return ResponseEntity.ok("정보 변경에 성공하였습니다.");
         } catch (Exception e) {
             e.printStackTrace();
