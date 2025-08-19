@@ -65,7 +65,7 @@ function Navs() {
                     {' '}
                     {/* Changed maxWidth to 100% */}
                     <Navbar.Brand onClick={() => navigateTo('/')}>
-                        <img src="img/logo/plogo4.png" alt="로고" className="logo5" />
+                        <img src="img/logo/plogo.png" alt="로고" className="logo5" />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : true)} />
                     <Navbar.Collapse id="basic-navbar-nav">
