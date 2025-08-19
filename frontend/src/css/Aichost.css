@@ -166,7 +166,7 @@ input[type='file'] {
 
 .card-img {
     width: 100%;
-    height: 150px;
+    height: 200px;
 }
 
 .text {
@@ -212,6 +212,11 @@ input[type='file'] {
 
 @media (max-width: 768px) {
     .btns {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .btnsfail {
         width: 100%;
         margin-bottom: 10px;
     }
