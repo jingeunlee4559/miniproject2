@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.dto.request.*;
+import com.example.backend.dto.request.Board.BoardCreateRequestDTO;
+import com.example.backend.dto.request.Board.BoardUpdateRequestDTO;
 import com.example.backend.dto.response.*;
 import com.example.backend.service.BoardService;
 

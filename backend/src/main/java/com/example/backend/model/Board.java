@@ -1,7 +1,7 @@
 package com.example.backend.model;
 
 import java.time.LocalDateTime;
-import com.example.backend.dto.request.*;
+import com.example.backend.dto.request.Board.BoardCreateRequestDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

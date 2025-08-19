@@ -25,4 +25,6 @@ public interface MemberMapper {
     void updateMemberRole(String mem_id, MemberRole mem_Role);
 
     Member findById(@Param("mem_id") String memId);
+
+    List<Member> findByIds(List<String> memberIds);
 }
