@@ -12,6 +12,8 @@ public interface BoardMapper {
 
     void createBoard(Board board);
 
+    void updateBoard(Board board);
+    
     void deleteBoard(@Param("board_seq") Long boardSeq);
 
     Board findBoardBySeq(@Param("board_seq") Long boardSeq);
@@ -19,5 +21,6 @@ public interface BoardMapper {
     void incrementViewCount(@Param("board_seq") Long boardSeq);
     
     List<Board> getAllBoards();
+
 
 }

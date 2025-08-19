@@ -23,6 +23,16 @@ INSERT INTO BOARD (
 )
 </insert>
 
+<update id="updateBoard">
+    UPDATE BOARD
+    SET board_title = #{board_title},
+        board_content = #{board_content},
+        update_at = SYSDATE,
+        original_fileName = #{original_fileName, jdbcType=VARCHAR},
+        stored_fileName = #{stored_fileName, jdbcType=VARCHAR}
+    WHERE board_seq = #{board_seq}
+</update>
+
 <update id="deleteBoard" parameterType="long">
     UPDATE BOARD
     SET board_deleted = 1
@@ -30,7 +40,7 @@ INSERT INTO BOARD (
 </update>
 
 <select id="findBoardBySeq" parameterType="long" resultType="com.example.backend.model.Board">
-    SELECT board_seq, mem_id, board_title, board_content, board_at, board_views
+    SELECT board_seq, mem_id, board_title, board_content, create_at, board_views
     FROM BOARD
     WHERE board_seq = #{board_seq}
 </select>

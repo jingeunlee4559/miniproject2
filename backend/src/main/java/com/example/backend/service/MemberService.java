@@ -1,15 +1,16 @@
 package com.example.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.backend.dto.request.*;
+import com.example.backend.dto.response.*;
+import com.example.backend.model.*;
 import com.example.backend.mapper.MemberMapper;
-import com.example.backend.model.Member;
-import com.example.backend.model.MemberRole;
-import com.example.backend.model.MemberStatus;
 
 @Service
 public class MemberService {
@@ -20,11 +21,19 @@ public class MemberService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public List<Member> getAllMembers() {
-        return memberMapper.getAllMembers();
+    public List<MemberInfoResponseDTO> getAllMembers() {
+        List<MemberInfoResponseDTO> memberInfoList = new ArrayList<>();
+
+        for (var member : memberMapper.getAllMembers()) {
+            memberInfoList.add(MemberInfoResponseDTO.from(member));
+        }
+
+        return memberInfoList;
     }
 
-    public void registerMember(Member member) {
+    public void registerMember(MemberRegisterRequestDTO requestDTO) {
+
+        Member member = new Member(requestDTO);
         // 비밀번호 암호화
         String encodedPw = passwordEncoder.encode(member.getMem_pw());
         member.setMem_pw(encodedPw);
@@ -33,9 +42,22 @@ public class MemberService {
         memberMapper.registerMember(member);
     }
 
-    public void updateMember(Member member) {
+    public void updateMember(String mem_id, MemberUpdateRequestDTO requestDTO) {
+        Member member = memberMapper.findById(mem_id);
+
+        if (requestDTO.getMem_name() != null) {
+            member.setMem_name(requestDTO.getMem_name());
+        }
+        if (requestDTO.getMem_email() != null) {
+            member.setMem_email(requestDTO.getMem_email());
+        }
+        if (requestDTO.getMem_phone() != null) {
+            member.setMem_phone(requestDTO.getMem_phone());
+        }
+
         String encodedPw = passwordEncoder.encode(member.getMem_pw());
         member.setMem_pw(encodedPw);
+
         memberMapper.updateMember(member);
     }
 
@@ -55,34 +77,34 @@ public class MemberService {
         return memberMapper.checkId(mem_id) == 0;
     }
 
-    public Member login(String mem_id, String rawPassword) {
-        Member member = memberMapper.findById(mem_id);
+    public MemberInfoResponseDTO login(MemberLoginRequestDTO requestDTO) {
+        Member member = memberMapper.findById(requestDTO.getMem_id());
 
         if (member == null) {
             return null;
         }
-        if (!passwordEncoder.matches(rawPassword, member.getMem_pw())) {
+        if (!passwordEncoder.matches(requestDTO.getMem_pw(), member.getMem_pw())) {
             return null;
         }
         if (member.getMem_status() != MemberStatus.ACTIVE) {
             return null;
         }
-        return member;
+
+        return MemberInfoResponseDTO.from(member);
     }
 
     public boolean verifyPassword(String mem_id, String rawPassword) {
         Member member = memberMapper.findById(mem_id);
 
         if (member == null) {
+            System.out.println("멤버를 찾을수없음");
             return false;
         }
 
         return passwordEncoder.matches(rawPassword, member.getMem_pw());
     }
 
-    public Member getMember(String memId) {
-        Member member = memberMapper.findById(memId);
-
-        return member;
+    public MemberInfoResponseDTO getMember(String memId) {
+        return MemberInfoResponseDTO.from(memberMapper.findById(memId));
     }
 }
