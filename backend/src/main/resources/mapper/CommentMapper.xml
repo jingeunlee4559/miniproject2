@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.CommentMapper">
+
+    <!-- 1. 댓글 생성 (createComment) -->
+    <insert id="createComment" parameterType="com.example.backend.model.Comment" useGeneratedKeys="true" keyProperty="comment_seq">
+        INSERT INTO COMMENTS (
+            board_seq, 
+            mem_id, 
+            comment_content, 
+        ) VALUES (
+            #{board_seq}, 
+            #{mem_id}, 
+            #{comment_content}, 
+        )
+    </insert>
+
+    <!-- 2. 댓글 수정 (updateComment) -->
+    <update id="updateComment" parameterType="com.example.backend.model.Comment">
+        UPDATE 
+            COMMENTS
+        SET 
+            comment_content = #{comment_content},
+            update_at = SYSTIMESTAMP
+        WHERE 
+            comment_seq = #{comment_seq}
+    </update>
+
+    <!-- 3. 댓글 삭제 (deleteComment) -->
+    <delete id="deleteComment">
+        DELETE FROM 
+            COMMENTS
+        WHERE 
+            comment_seq = #{comment_seq}
+    </delete>
+
+    <!-- 4. 댓글 ID로 단건 조회 (findBySeq) -->
+    <select id="findBySeq" resultType="com.example.backend.model.Comment">
+        SELECT 
+            comment_seq,
+            board_seq,
+            mem_id,
+            comment_content,
+            parent_seq,
+            create_at,
+            update_at
+        FROM 
+            COMMENTS
+        WHERE 
+            comment_seq = #{comment_seq}
+    </select>
+
+    <!-- 5. 게시글 ID로 댓글 목록 조회 (findByBoardSeq) -->
+    <select id="findByBoardSeq" resultType="com.example.backend.model.Comment">
+        SELECT 
+            comment_seq,
+            board_seq,
+            mem_id,
+            comment_content,
+            parent_seq,
+            create_at,
+            update_at
+        FROM 
+            COMMENTS
+        WHERE 
+            board_seq = #{board_seq}
+        ORDER BY 
+            create_at ASC
+    </select>
+
+</mapper>
+apper>apper>

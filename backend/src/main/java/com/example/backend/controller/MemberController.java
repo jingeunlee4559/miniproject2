@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.dto.request.MemberLoginRequestDTO;
-import com.example.backend.dto.request.MemberRegisterRequestDTO;
-import com.example.backend.dto.request.MemberUpdateRequestDTO;
-import com.example.backend.dto.request.PasswordVerifyRequestDTO;
+import com.example.backend.dto.request.Member.MemberLoginRequestDTO;
+import com.example.backend.dto.request.Member.MemberRegisterRequestDTO;
+import com.example.backend.dto.request.Member.MemberUpdateRequestDTO;
+import com.example.backend.dto.request.Member.PasswordVerifyRequestDTO;
 import com.example.backend.dto.response.MemberInfoResponseDTO;
 import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;

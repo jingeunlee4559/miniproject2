@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.dto.request.*;
+import com.example.backend.dto.request.Board.BoardCreateRequestDTO;
+import com.example.backend.dto.request.Board.BoardUpdateRequestDTO;
 import com.example.backend.dto.response.*;
 import com.example.backend.mapper.BoardMapper;
 import com.example.backend.model.Board;

@@ -3,9 +3,12 @@
 
 <mapper namespace="com.example.backend.mapper.MemberMapper">
 
-
-    <select id="getAllMembers" resultType="com.example.backend.model.Member"> SELECT * FROM MEMBER </select>
 <!-- MemberMapper.xml -->
+
+<select id="getAllMembers" resultType="com.example.backend.model.Member"> 
+    SELECT * FROM MEMBER 
+</select>
+
 <insert id="registerMember">
 INSERT INTO MEMBER (
     mem_id, mem_pw, mem_name, mem_birth, mem_phone, mem_role, mem_status, mem_email, mem_gender
@@ -20,49 +23,65 @@ INSERT INTO MEMBER (
 )
 </insert>
 
-    <update id="updateMember">
-        UPDATE MEMBER
-        <set>
-        <if test="mem_pw != null and mem_pw != ''">
-            mem_pw = #{mem_pw},
-        </if>
-        <if test="mem_name != null and mem_name != ''">
-            mem_name = #{mem_name},
-        </if>
-        <if test="mem_birth != null">
-            TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
-        </if>
-        <if test="mem_phone != null and mem_phone != ''">
-            mem_phone = #{mem_phone},
-        </if>
-        <if test="mem_email != null and mem_email != ''">
-            mem_email = #{mem_email},
-        </if>
-        </set>
-        WHERE mem_id = #{mem_id}
-    </update>
+<update id="updateMember">
+    UPDATE MEMBER
+    <set>
+    <if test="mem_pw != null and mem_pw != ''">
+        mem_pw = #{mem_pw},
+    </if>
+    <if test="mem_name != null and mem_name != ''">
+        mem_name = #{mem_name},
+    </if>
+    <if test="mem_birth != null">
+        TO_DATE(#{mem_birth}, 'YYYY-MM-DD'),
+    </if>
+    <if test="mem_phone != null and mem_phone != ''">
+        mem_phone = #{mem_phone},
+    </if>
+    <if test="mem_email != null and mem_email != ''">
+        mem_email = #{mem_email},
+    </if>
+    </set>
+    WHERE mem_id = #{mem_id}
+</update>
 
-    <update id="updateMemberRole">
-        UPDATE MEMBER
-        SET mem_role = #{mem_role}
-        WHERE mem_id = #{mem_id}
-    </update>
+<update id="updateMemberRole">
+    UPDATE MEMBER
+    SET mem_role = #{mem_role}
+    WHERE mem_id = #{mem_id}
+</update>
 
-    <update id="updateMemberStatus">
-        UPDATE MEMBER
-        SET mem_status = #{mem_status}
-        WHERE mem_id = #{mem_id}
-    </update>
+<update id="updateMemberStatus">
+    UPDATE MEMBER
+    SET mem_status = #{mem_status}
+    WHERE mem_id = #{mem_id}
+</update>
 
-    <!-- 아이디 중복 체크 -->
-    <select id="checkId" resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT COUNT(*) FROM MEMBER WHERE mem_id = #{memId}
-    </select>
+<!-- 아이디 중복 체크 -->
+<select id="checkId" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(*) FROM MEMBER WHERE mem_id = #{memId}
+</select>
 
 <select id="findById" parameterType="string" resultType="com.example.backend.model.Member">
     SELECT mem_id, mem_pw, mem_name, mem_phone, mem_email, mem_role, mem_status, mem_gender
     FROM MEMBER
     WHERE mem_id = #{mem_id}
+</select>
+
+<select id="findByIds" resultType="com.example.backend.model.Member">
+    SELECT
+        mem_id, mem_pw, mem_name, mem_phone, mem_email,
+        mem_birth, mem_gender, created_at, mem_role, mem_status
+    FROM
+        MEMBER
+    <if test="memberIds != null and !memberIds.isEmpty()">
+    WHERE
+        mem_id IN
+        <foreach collection="memberIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+            
+    </if>
 </select>
 
 </mapper>
