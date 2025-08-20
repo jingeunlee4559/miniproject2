@@ -61,8 +61,8 @@
             comment_seq = #{comment_seq}
     </select>
 
-    <!-- 5. 게시글 ID로 댓글 목록 조회 (findByBoardSeq) -->
-    <select id="findByBoardSeq" resultType="com.example.backend.model.Comments">
+    <!-- 5. TargetSeq로 댓글 목록 조회 (findByTargetSeq) -->
+    <select id="findByTargetSeq" resultType="com.example.backend.model.Comments">
         SELECT 
             comment_seq,
             target_type,
