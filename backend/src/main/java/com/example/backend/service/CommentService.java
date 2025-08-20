@@ -9,6 +9,8 @@ import com.example.backend.mapper.MemberMapper;
 import com.example.backend.model.Comments;
 import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;
+import com.example.backend.model.TargetType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,24 +31,21 @@ public class CommentService {
     @Autowired
     private MemberMapper memberMapper;
 
-    @Autowired
-    private BoardMapper boardMapper;
-
-    public void createComment(String currentUserId, Long boardSeq, CommentCreateRequestDTO requestDto) {
-        if (boardMapper.findBoardBySeq(boardSeq) == null) {
-            throw new RuntimeException("댓글을 작성할 게시글이 존재하지 않습니다.");
-        }
+    public CommentResponseDTO createComment(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember, CommentCreateRequestDTO requestDto) {
 
         Comments comment = new Comments(requestDto);
-        comment.setMem_id(currentUserId);
-        comment.setBoard_seq(boardSeq);
+        comment.setMem_id(loginMember.getMem_id());
+        comment.setTarget_type(targetType);
+        comment.setTarget_seq(targetSeq);
 
         commentMapper.createComment(comment);
+        comment = commentMapper.findBySeq(comment.getComment_seq());
+        return CommentResponseDTO.of(comment, loginMember.getMem_name());
     }
 
-    public List<CommentResponseDTO> getCommentsByBoardSeq(Long boardSeq, MemberInfoResponseDTO loginMember) {
+    public List<CommentResponseDTO> getCommentsByTargetSeq(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember) {
         // 1. 특정 게시글의 모든 댓글을 DB에서 가져옵니다. (1번 쿼리)
-        List<Comments> comments = commentMapper.findByBoardSeq(boardSeq);
+        List<Comments> comments = commentMapper.findByTargetSeq(targetType, targetSeq);
 
         if (comments.isEmpty()) {
             return new ArrayList<>(); // 댓글이 없으면 빈 리스트 반환
@@ -75,7 +74,7 @@ public class CommentService {
             Member member = membersMap.get(comment.getMem_id());
 
             // 5-2. 댓글과 작성자 정보를 사용해 DTO를 생성합니다.
-            CommentResponseDTO dto = CommentResponseDTO.of(comment, member);
+            CommentResponseDTO dto = CommentResponseDTO.of(comment, member.getMem_name());
 
             // 5-3. 권한을 계산하여 DTO에 설정합니다.
             boolean isEditable = false;

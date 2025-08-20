@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.request.Comment.*;
 import com.example.backend.dto.response.CommentResponseDTO;
 import com.example.backend.dto.response.MemberInfoResponseDTO;
+import com.example.backend.model.TargetType;
 import com.example.backend.service.CommentService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    //#region 게시글 댓글 기능
+    
     // 특정 게시글의 댓글 목록 조회
     @GetMapping("/boards/{boardSeq}/comments")
-    public ResponseEntity<?> getComments(@PathVariable Long boardSeq, HttpSession session) {
+    public ResponseEntity<?> getCommentsForBoard(@PathVariable Long boardSeq, HttpSession session) {
         try {
             MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");
-            List<CommentResponseDTO> comments = commentService.getCommentsByBoardSeq(boardSeq, loginMember);
+            List<CommentResponseDTO> comments = commentService.getCommentsByTargetSeq(TargetType.BOARD, boardSeq, loginMember);
             return ResponseEntity.ok(comments);
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,22 +39,27 @@ public class CommentController {
 
     // 댓글 생성
     @PostMapping("/boards/{boardSeq}/comments")
-    public ResponseEntity<?> createComment(@PathVariable Long boardSeq, @RequestBody CommentCreateRequestDTO requestDto, HttpSession session) {
+    public ResponseEntity<?> createCommentForBoard(@PathVariable Long boardSeq, @RequestBody CommentCreateRequestDTO requestDto, HttpSession session) {
         try {
             MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");
             if (loginMember == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("댓글을 작성하려면 로그인이 필요합니다.");
             }
-            commentService.createComment(loginMember.getMem_id(), boardSeq, requestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("댓글이 성공적으로 작성되었습니다.");
+            CommentResponseDTO responseDTO = commentService.createComment(TargetType.BOARD, boardSeq, loginMember, requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
+    //#endregion
+
+    //#region 여행지 정보 댓글 기능
+    //#endregion
+    
     // 댓글 수정
-    @PutMapping("/boards/{boardSeq}/comments/{commentSeq}")
+    @PutMapping("/comments/{commentSeq}")
     public ResponseEntity<?> updateComment(@PathVariable Long commentSeq, @RequestBody CommentUpdateRequestDTO requestDto, HttpSession session) {
         try {
             MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");
@@ -69,7 +77,7 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/boards/{boardSeq}/comments/{commentSeq}")
+    @DeleteMapping("/comments/{commentSeq}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentSeq, HttpSession session) {
         try {
             MemberInfoResponseDTO loginMember = (MemberInfoResponseDTO) session.getAttribute("loginMember");

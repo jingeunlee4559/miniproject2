@@ -9,6 +9,7 @@
     SELECT * 
     FROM BOARD 
     WHERE deleted_at IS NULL
+    ORDER BY created_at DESC, board_seq DESC
 </select>
 
 <insert id="createBoard">

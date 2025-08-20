@@ -6,15 +6,21 @@
 <mapper namespace="com.example.backend.mapper.CommentMapper">
 
     <!-- 1. 댓글 생성 (createComment) -->
-    <insert id="createComment" parameterType="com.example.backend.model.Comments" useGeneratedKeys="true" keyProperty="comment_seq">
+    <insert id="createComment" 
+    parameterType="com.example.backend.model.Comments" 
+    useGeneratedKeys="true" 
+    keyProperty="comment_seq"
+    keyColumn="comment_seq">
         INSERT INTO COMMENTS (
-            board_seq, 
+            target_type,
+            target_seq, 
             mem_id, 
-            comment_content, 
+            comment_content
         ) VALUES (
-            #{board_seq}, 
+            #{target_type},
+            #{target_seq}, 
             #{mem_id}, 
-            #{comment_content}, 
+            #{comment_content}
         )
     </insert>
 
@@ -43,7 +49,8 @@
     <select id="findBySeq" resultType="com.example.backend.model.Comments">
         SELECT 
             comment_seq,
-            board_seq,
+            target_type,
+            target_seq,
             mem_id,
             comment_content,
             created_at,
@@ -58,7 +65,8 @@
     <select id="findByBoardSeq" resultType="com.example.backend.model.Comments">
         SELECT 
             comment_seq,
-            board_seq,
+            target_type,
+            target_seq,
             mem_id,
             comment_content,
             created_at,
@@ -66,10 +74,11 @@
         FROM 
             COMMENTS
         WHERE 
-            board_seq = #{board_seq}
+            target_type = #{target_type}
+            AND target_seq = #{target_seq}
             AND deleted_at IS NULL
         ORDER BY 
-            created_at ASC
+            created_at DESC, comment_seq DESC
     </select>
 
 </mapper>
