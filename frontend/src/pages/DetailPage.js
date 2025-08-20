@@ -16,71 +16,30 @@ const DetailPage = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewImage, setPreviewImage] = useState('');
     const navigate = useNavigate();
-    const seq = window.sessionStorage.getItem('mem_seq');
-    const [comments, setComments] = useState([
-        {
-            name: '여행러버',
-            text: '정말 힐링되는 여행지였어요 🌿',
-            date: '2025-08-13',
-            avatar: '/img/user1.png',
-        },
-        {
-            name: '맛집탐험가',
-            text: '근처 맛집 추천 부탁드려요 😋',
-            date: '2025-08-12',
-            avatar: '/img/user2.png',
-        },
-    ]);
+    const [comments, setComments] = useState([]);
 
-    const addComment = (text) => {
-        const newComment = {
-            name: '익명',
-            text,
-            date: new Date().toISOString().split('T')[0],
-            avatar: '/img/default-avatar.png',
-        };
-        setComments([newComment, ...comments]);
+    const addComment = async (text) => {
+        try {
+            const newComment = {
+                board_seq: board_seq,
+                comment_content: text,
+            }
+            const response = await axios.post(`/api/boards/${board_seq}/comments`, newComment);
+            setComments([response.data, ...comments]);
+        } catch (error){
+            console.error("댓글 등록 중 오류 발생:", error);
+        }
     };
-
-    const mockData = [
-        {
-            board_seq: 1,
-            board_title: '제주도 3박 4일 여행 코스 추천',
-            board_at: '2025-08-01T12:00:00',
-            board_views: 320,
-            writer: '여행러버',
-            content:
-                '제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...제주도 여행 3박 4일 추천 코스는...',
-        },
-        { board_seq: 2, board_title: '부산 여행 꿀팁 총정리', board_at: '2025-08-02T09:30:00', board_views: 280, writer: '부산토박이', content: '부산에서 꼭 가봐야 할 곳은...' },
-        { board_seq: 3, board_title: '강릉 바다뷰 카페 BEST 5', board_at: '2025-08-03T14:20:00', board_views: 210, writer: '카페헌터', content: '강릉 바다뷰 카페 추천 리스트...' },
-        { board_seq: 4, board_title: '서울 근교 당일치기 여행지 추천', board_at: '2025-08-04T10:15:00', board_views: 350, writer: '나들이왕', content: '서울 근교에서 당일치기로 가볼 만한 곳은...' },
-        { board_seq: 5, board_title: '전주 한옥마을 맛집 리스트', board_at: '2025-08-05T16:45:00', board_views: 295, writer: '맛집러', content: '전주 한옥마을에서 꼭 가야 하는 맛집은...' },
-        { board_seq: 6, board_title: '속초 여행 가볼 만한 곳', board_at: '2025-08-06T18:00:00', board_views: 330, writer: '속초마니아', content: '속초 여행에서 빼놓을 수 없는 명소...' },
-        { board_seq: 7, board_title: '경주 역사 여행 코스', board_at: '2025-08-07T13:40:00', board_views: 190, writer: '역사탐방', content: '경주에서 역사 여행을 즐기려면...' },
-        { board_seq: 8, board_title: '여수 밤바다 여행 후기', board_at: '2025-08-08T15:50:00', board_views: 260, writer: '야경러버', content: '여수 밤바다 여행은 정말 낭만적입니다...' },
-        { board_seq: 9, board_title: '제천 힐링 여행 코스 추천', board_at: '2025-08-09T09:10:00', board_views: 180, writer: '힐링러버', content: '제천에서 힐링할 수 있는 여행 코스는...' },
-        {
-            board_seq: 10,
-            board_title: '울릉도, 독도 여행 준비 팁',
-            board_at: '2025-08-10T20:20:00',
-            board_views: 220,
-            writer: '바다탐험가',
-            content: '울릉도, 독도 여행 전 반드시 준비해야 할 것들...',
-        },
-    ];
-
-    //const boardDetail = mockData.find((item) => item.board_seq === parseInt(board_seq));
 
     useEffect(() => {
       const fetchBoardDetail = async () => {
         try {
           const response = await axios.get(`/api/board/${board_seq}`);
           setBoardDetail(response.data);
-          setEditedTitle(response.data.title);
-          setEditedContent(response.data.content);
-          if (response.data.img) {
-            setPreviewImage(`http://localhost:8300${response.data.img}`);
+          setEditedTitle(response.data.board_title);
+          setEditedContent(response.data.board_content);
+          if (response.data.imageUrl) {
+            setPreviewImage(`/images/${response.data.imageUrl}`);
           }
         } catch (error) {
           console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
@@ -89,6 +48,23 @@ const DetailPage = () => {
 
       fetchBoardDetail();
     }, [board_seq]);
+
+     // 2. 댓글 목록 조회를 위한 새로운 useEffect를 추가합니다.
+     useEffect(() => {
+         // 댓글 데이터를 가져오는 비동기 함수를 선언합니다.
+         const fetchComments = async () => {
+             try {
+                 // board_seq를 이용해 해당 게시글의 댓글 목록을 요청합니다.
+                 const response = await axios.get(`/api/boards/${board_seq}/comments`);
+                 // 서버로부터 받은 댓글 목록 데이터로 state를 업데이트합니다.
+                 setComments(response.data);
+             } catch (error) {
+                 console.error("댓글 목록을 가져오는 중 오류 발생:", error);
+             }
+         };
+         
+         fetchComments();
+     }, [board_seq]); // 3. 의존성 배열에 board_seq를 넣습니다.
 
     const handleEdit = () => {
       setIsEditing(true);
@@ -103,7 +79,7 @@ const DetailPage = () => {
       }
 
       try {
-        const response = await axios.put(`/board/update/${board_seq}`, formData, {
+        const response = await axios.put(`/api/board/${board_seq}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -114,11 +90,11 @@ const DetailPage = () => {
           ...boardDetail,
           title: editedTitle,
           content: editedContent,
-          img: response.data.img || boardDetail.img
+          img: response.data.imageUrl || boardDetail.imageUrl
         });
         // 이미지가 변경된 경우, 미리보기 이미지를 업데이트
-        if (response.data.img) {
-          setPreviewImage(`http://localhost:8300${response.data.img}?${new Date().getTime()}`);
+        if (response.data.imageUrl) {
+          setPreviewImage(`/images/${response.data.imageUrl}?${new Date().getTime()}`);
         }
         Swal.fire({
           icon: 'success',
@@ -188,12 +164,19 @@ const DetailPage = () => {
             <Container className="detail-container pt-5 mt-5">
                 {!isEditing && (
                     <Row className="button-group">
-                        <Col>
-                            <Button onClick={handleEdit} variant='warning' className="btn me-2">수정</Button>
+                        <Col>   
+                        {boardDetail?.editable && (
+                            <Button onClick={handleEdit} variant='warning' className="btn me-2">
+                                수정
+                            </Button>
+                        )}
                             {/* <Button variant="warning" className="btn me-2"></Button> */}
+                        {boardDetail?.deletable && (
                             <Button onClick={deletepost} variant="danger" className="btn">
                                 삭제
                             </Button>
+                        )}
+                            
                         </Col>
                     </Row>
                 )}
@@ -222,22 +205,22 @@ const DetailPage = () => {
                                 </div>
                             )}
                         </Form.Group>
-                        {/* <Button onClick={handleSave} variant="success" className="mt-3"> */}
-                        <Button variant="success" className="mt-3">
+                        {/* <Button variant="success" className="mt-3"> */}
+                        <Button onClick={handleSave} variant="success" className="mt-3">
                             저장
                         </Button>
                     </div>
                 ) : (
                     <>
                         <div className="detail-content">
-                            <h3 className="detail-title">{boardDetail?.title}</h3>
+                            {/* <h3 className="detail-title">{boardDetail?.title}</h3> */}
                             <h3 className="detail-title">{boardDetail?.board_title}</h3>
                             <p className="detail-info">
-                                작성자: {boardDetail?.mem_id} | 날짜: {boardDetail?.board_at.substring(0, 10)} | 조회수: {boardDetail?.board_views}
+                                작성자: {boardDetail?.mem_id} | 날짜: {boardDetail?.created_at.substring(0, 10)} | 조회수: {boardDetail?.board_views}
                             </p>
                             <hr />
                             <p className="detail-text">{boardDetail?.board_content}</p>
-                            {boardDetail?.img && <img src={previewImage} alt="Board Detail" style={{ maxWidth: '100%' }} />}
+                            {boardDetail?.imageUrl && <img src={previewImage} alt="Board Detail" style={{ maxWidth: '100%' }} />}
                         </div>
                         <Row className="t2 mb-4 pt-5" id="detail">
                             <Col xs="auto">

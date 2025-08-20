@@ -24,11 +24,11 @@ const CommentList = ({ comments }) => {
                     <ListGroup.Item key={index} className="comment-item">
                         <Row className="align-items-center">
                             <Col xs="auto" className="comment-author">
-                                {comment.name}
+                                {comment.mem_name}
                             </Col>
-                            <Col className="comment-text">{comment.text}</Col>
+                            <Col className="comment-text">{comment.comment_content}</Col>
                             <Col xs="auto" className="comment-date">
-                                {comment.date}
+                                {comment.created_at}
                             </Col>
                         </Row>
                     </ListGroup.Item>
