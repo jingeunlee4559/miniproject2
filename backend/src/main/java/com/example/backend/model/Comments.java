@@ -18,6 +18,7 @@ public class Comments {
     private String comment_content;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+    private LocalDateTime deleted_at;
 
     public Comments(CommentCreateRequestDTO requestDTO) {
         this.comment_content = requestDTO.getComment_content();
@@ -30,7 +31,8 @@ public class Comments {
 //          mem_id          VARCHAR2(50) NOT NULL,
 //          comment_content CLOB NOT NULL,
 //          created_at      TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
-//          updated_at      TIMESTAMP,
+//          updated_at      TIMESTAMP DEFAULT NULL,
+//          deleted_at      TIMESTAMP DEFAULT NULL,
 //          CONSTRAINT PK_COMMENT PRIMARY KEY (comment_seq),
 //          CONSTRAINT FK_COMMENT_BOARD FOREIGN KEY (board_seq) REFERENCES BOARD(board_seq) ON DELETE
 //       CASCADE,

@@ -1,5 +1,7 @@
 package com.example.backend.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.dto.request.*;
-import com.example.backend.dto.request.Board.BoardCreateRequestDTO;
-import com.example.backend.dto.request.Board.BoardUpdateRequestDTO;
+import com.example.backend.dto.request.Board.*;
 import com.example.backend.dto.response.*;
 import com.example.backend.service.BoardService;
 
@@ -70,7 +70,7 @@ public class BoardController {
             @PathVariable Long boardSeq,
             @ModelAttribute BoardUpdateRequestDTO requestDTO,
             @RequestParam(required = false) MultipartFile board_img,
-            HttpSession session) {
+            HttpSession session) throws IOException {
         boardService.updateBoard(boardSeq, requestDTO, board_img);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
