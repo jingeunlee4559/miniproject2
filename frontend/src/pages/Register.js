@@ -167,7 +167,7 @@ function Register() {
                     <Row className="justify-content-md-center">
                         <Col md={6} className="login-form-container">
                             <div className="text-center mb-2">
-                                <img src="/img/logo/plogo5.png" alt="Read Fit 로고" className="login-logo" />
+                                <img src="/img/logo/logo12345.png" alt="Read Fit 로고" className="login-logo" />
                             </div>
                             <h2 className="text-center mb-1">회원가입</h2>
                             <Form onSubmit={handleSubmit}>

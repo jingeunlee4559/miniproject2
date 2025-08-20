@@ -79,10 +79,10 @@
 }
 
 .logo5 {
-    width: 100px;
+    width: 50px;
     height: auto;
     object-fit: cover;
-    filter: brightness(200%);
+    /* filter: brightness(200%); */
 }
 
 .navbar-nav {
