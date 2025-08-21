@@ -13,8 +13,8 @@ public class BoardDetailResponseDTO {
     private String board_title;
     private String board_content;
     private String mem_id;
-    private LocalDateTime create_at;
-    private LocalDateTime update_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
     private Integer board_views;
     private String imageUrl;
 
@@ -28,8 +28,8 @@ public class BoardDetailResponseDTO {
         dto.setBoard_title(board.getBoard_title());
         dto.setBoard_content(board.getBoard_content());
         dto.setMem_id(board.getMem_id());
-        dto.setCreate_at(board.getCreate_at());
-        dto.setUpdate_at(board.getUpdate_at());
+        dto.setCreated_at(board.getCreated_at());
+        dto.setUpdated_at(board.getUpdated_at());
         dto.setBoard_views(board.getBoard_views());
         dto.setImageUrl(board.getStored_fileName());
         return dto;

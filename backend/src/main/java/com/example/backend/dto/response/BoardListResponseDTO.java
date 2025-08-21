@@ -12,7 +12,7 @@ public class BoardListResponseDTO {
     private Long board_seq;
     private String board_title;
     private String mem_id; // 작성자 ID
-    private LocalDateTime create_at;
+    private LocalDateTime created_at;
     private Integer board_views; // 조회수
     private String imageUrl; // 썸네일 이미지 URL
 
@@ -21,7 +21,7 @@ public class BoardListResponseDTO {
         dto.setBoard_seq(board.getBoard_seq());
         dto.setBoard_title(board.getBoard_title());
         dto.setMem_id(board.getMem_id());
-        dto.setCreate_at(board.getCreate_at());
+        dto.setCreated_at(board.getCreated_at());
         dto.setBoard_views(board.getBoard_views());
         dto.setImageUrl(board.getStored_fileName()); // 예시: 저장된 파일명을 URL로 활용
         return dto;

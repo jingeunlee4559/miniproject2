@@ -24,9 +24,9 @@ public class Board {
     String board_content;
     String mem_id;
     Integer board_views;
-    Boolean board_deleted;
-    LocalDateTime create_at;
-    LocalDateTime update_at;
+    LocalDateTime created_at;
+    LocalDateTime updated_at;
+    LocalDateTime deleted_at;
     String original_fileName;
     String stored_fileName;
 }
@@ -37,9 +37,9 @@ public class Board {
 //     BOARD_CONTENT      CLOB,
 //     MEM_ID       VARCHAR2(50) NOT NULL,
 //     BOARD_VIEWS   NUMBER DEFAULT 0 NOT NULL,
-//     CREATE_AT  TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
-//     UPDATE_AT  TIMESTAMP,
-//     BOARD_DELETED   NUMBER(1) DEFAULT 0 NOT NULL,
+//     CREATED_AT  TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+//     UPDATED_AT  TIMESTAMP DEFAULT NULL,
+//     DELETED_AT  TIMESTAMP DEFAULT NULL,
 //     ORIGINAL_FILENAME        VARCHAR2(255),
 //     STORED_FILENAME        VARCHAR2(255),
 //     CONSTRAINT PK_BOARD PRIMARY KEY (BOARD_SEQ),

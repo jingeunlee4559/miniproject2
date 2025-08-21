@@ -5,7 +5,6 @@ import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import '../../css/Infomy.css';
 import Swal from 'sweetalert2';
 import axios from "../../axios";
-import md5 from 'md5';
 import SbzzFile from './SbzzFile';
 
 const Infomy = () => {
@@ -23,7 +22,7 @@ const Infomy = () => {
       .then((res) => {
         setInfoId(res.data.mem_id);
         setInfoEmail(res.data.mem_email);
-        //setInfoNick(res.data.mem_nick);
+        setInfoNick(res.data.mem_name);
         setInfoPhon(res.data.mem_phone);
         setInfoPw(res.data.mem_pw); // 해시된 비밀번호
       })
@@ -51,7 +50,7 @@ const Infomy = () => {
       if (passwordResult.isConfirmed) {
         const inputPassword = passwordResult.value;
 
-    axios.post(`/api/me/password/verify`, inputPassword)
+    axios.post(`/api/me/password/verify`, {password: inputPassword})
       .then((res)=>{
 
         if (res.data === true) {
@@ -60,7 +59,7 @@ const Infomy = () => {
             const userData = {
               mem_id: InfoId,
               mem_pw: inputPassword,
-              //mem_name: formData.mem_name,
+              mem_name: InfoNick,
               //mem_birth: formData.mem_birth,
               mem_phone: InfoPhon,
               mem_email: InfoEmail,
@@ -122,7 +121,7 @@ const Infomy = () => {
             // console.log(hashedInputPassword, '입력받은 번호');
             // console.log(InfoPw, 'db저장번호');
 
-    axios.post(`/api/me/password/verify`, { memId: mem_id, password: inputPassword })
+    axios.post(`/api/me/password/verify`, {password: inputPassword })
       .then((res)=>{
             if (res.data === true) {
               console.log("여기까지 들어오니?");
