@@ -6,33 +6,20 @@ import { Appdata } from '../../App';
 import Swal from 'sweetalert2';
 
 const Aistep2 = () => {
-    const [dates, setDates] = useState('');
-    const [moneys, setMoneys] = useState('');
+    const [q2Choice, setQ2Choice] = useState(''); // 여행지 | 코스
+    const [q2SubChoice, setQ2SubChoice] = useState(''); // 코스 세부 선택
 
     const navigate = useNavigate();
     const navigateTo = useCallback((path) => navigate(path), [navigate]);
 
     const data = useContext(Appdata);
 
-    console.log(data.shareData.lref);
-
-    const handleDateChange = (e) => {
-        setDates(e.target.value);
-    };
-
-    const handleMoneyChange = (e) => {
-        setMoneys(e.target.value);
-    };
-
     function Back() {
         navigateTo(-1);
     }
 
-    console.log(dates);
-    console.log(moneys);
-
     function Next() {
-        if (dates === '' || moneys === '') {
+        if (q2Choice === '' || (q2Choice === 'course' && q2SubChoice === '')) {
             Swal.fire({
                 icon: 'warning',
                 text: '모든 필드를 선택해주세요',
@@ -44,10 +31,10 @@ const Aistep2 = () => {
         let result = {
             lref: data.shareData.lref,
             sref: data.shareData.sref,
-            dates: dates,
-            moneys: moneys,
+            q2Choice: q2Choice,
+            q2SubChoice: q2SubChoice,
         };
-        console.log('Form Data to be sent:', result); // 데이터를 전송하기 전에 출력
+        console.log('Form Data to be sent:', result);
 
         data.setShare(result);
         navigateTo('/Aichoice/2/3');
@@ -58,38 +45,39 @@ const Aistep2 = () => {
             <Row className="justify-content-center">
                 <Col md={6}>
                     <Card className="m-auto aichoice-card">
+                        {/* Q2 */}
                         <Row>
                             <Col className="Qtitle">Q 02.</Col>
                         </Row>
                         <Row className="my-1">
-                            <Col className="Qti2 text-center">여행을 원하는 희망날짜와 시간을 선택 해주세요</Col>
+                            <Col className="Qti2 text-center">어떤 추천을 원하시나요?</Col>
                         </Row>
+
+                        {/* 여행지 / 코스 선택 */}
                         <Row className="my-2">
-                            <Col className="Qtit3 text-center">날짜를 선택 해주세요</Col>
-                        </Row>
-
-                        <Row>
                             <Col md={11} sm={10} xs={10} className="m-auto">
-                                <Form.Control type="date" className="my-2" value={dates} onChange={handleDateChange} />
-                            </Col>
-                        </Row>
-
-                        <Row className="my-2">
-                            <Col className="Qtit3 text-center">예상 금액을 선택 해주세요</Col>
-                        </Row>
-
-                        <Row>
-                            <Col md={11} sm={10} xs={10} className="m-auto">
-                                <Form.Select value={moneys} onChange={handleMoneyChange}>
+                                <Form.Select value={q2Choice} onChange={(e) => setQ2Choice(e.target.value)}>
                                     <option value="">선택하세요</option>
-                                    <option value="10만원 이하">10만원 이하</option>
-                                    <option value="10만원 ~ 30만원">10만원 ~ 30만원</option>
-                                    <option value="30만원 ~ 50만원">30만원 ~ 50만원</option>
-                                    <option value="50만원 이상">50만원 이상</option>
+                                    <option value="travel">여행지 추천</option>
+                                    <option value="course">코스 추천</option>
                                 </Form.Select>
                             </Col>
                         </Row>
 
+                        {/* 코스 세부 선택 (코스 선택 시만 보이도록) */}
+                        {q2Choice === 'course' && (
+                            <Row className="my-2">
+                                <Col md={11} sm={10} xs={10} className="m-auto">
+                                    <Form.Select value={q2SubChoice} onChange={(e) => setQ2SubChoice(e.target.value)}>
+                                        <option value="">세부 선택</option>
+                                        <option value="course_travel">여행지만 가지고 코스</option>
+                                        <option value="course_all">여행지 + 맛집 포함 코스</option>
+                                    </Form.Select>
+                                </Col>
+                            </Row>
+                        )}
+
+                        {/* 버튼 */}
                         <Row>
                             <Col className="mt-3 text-center">
                                 <Button onClick={Back} className="me-2 btnsfail">
