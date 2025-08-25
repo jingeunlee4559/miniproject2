@@ -1,43 +1,64 @@
-import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import Carousel3 from '../components/Carousel3';
-import Map from '../components/Map';
-import InfoSection from '../components/InfoSection';
-import CommentForm from '../components/CommentForm';
-import CommentList from '../components/CommentList';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import Carousel3 from '../components/Carousel3'; // 이미지 캐러셀
+import Map from '../components/Map'; // 지도
+import InfoSection from '../components/InfoSection'; // 상세정보 테이블
+import CommentForm from '../components/CommentForm'; // 댓글 입력 폼
+import CommentList from '../components/CommentList'; // 댓글 목록
 
 function Categorydetail() {
-    const [expanded, setExpanded] = useState(false);
-    const [comments, setComments] = useState([
-        {
-            name: '여행러버',
-            text: '정말 힐링되는 여행지였어요 🌿',
-            date: '2025-08-13',
-            avatar: '/img/user1.png',
-        },
-        {
-            name: '맛집탐험가',
-            text: '근처 맛집 추천 부탁드려요 😋',
-            date: '2025-08-12',
-            avatar: '/img/user2.png',
-        },
-    ]);
+    // URL 경로에서 ID 값을 가져옵니다 (예: /category/97 -> id는 97)
+    const { store_idx } = useParams();
+    // 백엔드에서 받아온 여행지 상세 정보를 저장할 상태
+    const [spot, setSpot] = useState(null);
+    // 데이터 로딩 상태
+    const [loading, setLoading] = useState(true);
 
-    const addComment = (text) => {
-        const newComment = {
-            name: '익명',
-            text,
-            date: new Date().toISOString().split('T')[0],
-            avatar: '/img/default-avatar.png',
-        };
-        setComments([newComment, ...comments]);
-    };
+    // 댓글 관련 상태 (추후 DB 연동 필요)
+    const [comments, setComments] = useState([]);
 
-    const toggleContent = () => setExpanded(!expanded);
+    // 페이지가 로딩될 때 실행되는 로직
+    useEffect(() => {
+        const detailUrl = `/api/category/${store_idx}`;
+        const viewUrl = `/api/category/${store_idx}/view`;
 
-    const fullText = `증심사는 광주지역의 대표적인 불교도량으로 무등산 서쪽 기슭에 자리 잡고 있다. 통일신라 때 고승 철감선사 도윤이 9세기 중엽에 세운 절로 고려 선종 때(1094년) 혜소국사가 고쳐 짓고 조선 세종 때 김방이 삼창하였는데 이때 오백나한의 불사가 이루어졌다고 한다. 이후 임진왜란 때 불타 없어진 것을 1609년(광해군 1)에 석경·수장·도광의 3대 선사가 4창했다고 한다. 그 후 신도들의 정성으로 몇 차례 보수가 이루어졌으나, 6 ·25 전쟁 때 많은 부분이 소실되었다가 1970년에야 대웅전을 비롯한 건물들이 복구되었다. 증심사의 유물로는 오백전과 비로전(사성전)에 봉안된 철조비로자나불 좌상(보물), 신라 말기의 석탑인 증심사 삼층석탑(지방유형문화재), 범종각, 각 층의 4면에 범자가 새겨진 범자칠층석탑 등 수많은 문화재가 있다. 특히 오백전은 무등산에 남아 있는 사찰 건물들 중 현재 가장 오래된 조선 초기(세종 25년)의 건물로 강진의 무위사 극락전과 계통을 같이 하는 정면 3간, 측면 3간의 단층 맞배지붕의 다심포 양식으로 그 희귀성이 돋보인다. 이에 1986년 11월 1일 광주문화재자료로 지정되어 있는 사찰이다. 다양한 템플스테이가 활발하게 운영되고 있으며 여러 가지 체험프로그램이 있다.`;
+        // 1. 상세 정보 조회 API 호출 (GET 요청)
+        axios
+            .get(detailUrl)
+            .then((response) => {
+                setSpot(response.data);
+            })
+            .catch((error) => {
+                console.error('상세 정보 로딩 실패:', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
 
-    const shortText = fullText.slice(0, 400) + '...'; // 처음 150자만 표시
+        // 2. 조회수 증가 API 호출 (PUT 요청)
+        axios.put(`${viewUrl}/view`).catch((error) => console.error('조회수 증가 요청 실패:', error));
+    }, [store_idx]); // id 값이 바뀔 때마다 이 effect가 다시 실행됩니다.
+
+    // 로딩 중일 때 보여줄 화면
+    if (loading) {
+        return (
+            <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+                <Spinner animation="border" />
+                <span className="ms-2">상세 정보를 불러오는 중입니다...</span>
+            </Container>
+        );
+    }
+
+    // 데이터를 찾지 못했을 때 보여줄 화면
+    if (!spot) {
+        return (
+            <Container>
+                <p className="text-center my-5">해당 여행지 정보를 찾을 수 없습니다.</p>
+            </Container>
+        );
+    }
 
     return (
         <>
@@ -45,113 +66,64 @@ function Categorydetail() {
             <Container className="mt-5">
                 {/* 제목 */}
                 <Row id="home">
-                    <Col style={{ fontSize: '3rem', fontWeight: 'bold' }}>증심사(광주)</Col>
+                    <Col style={{ fontSize: '3rem', fontWeight: 'bold' }}>{spot.name}</Col>
                 </Row>
 
                 {/* 위치 정보 */}
                 <Row>
-                    <Col style={{ color: 'gray' }}>광주 동구</Col>
+                    <Col style={{ color: 'gray' }}>
+                        {spot.region1Name} &gt; {spot.region2Name}
+                    </Col>
                 </Row>
 
-                {/* 요약 설명 (짧은 밑줄) */}
+                {/* 요약 설명 */}
                 <Row className="mt-3 mb-4">
                     <Col style={{ paddingBottom: '4px' }}>
-                        <span
-                            style={{
-                                borderBottom: '2px solid #6DD2FF',
-                                paddingBottom: '2px',
-                                fontWeight: '500',
-                                color: '#333',
-                                whiteSpace: 'nowrap',
-                            }}
-                        >
-                            철감선사 도윤이 창건한 사찰, 무등산의 대표적인 불교 도량
-                        </span>
+                        <span style={{ borderBottom: '2px solid #6DD2FF', paddingBottom: '2px', fontWeight: '500' }}>{spot.shortDesc}</span>
                     </Col>
                 </Row>
 
-                {/* 이미지 캐러셀 */}
+                {/* 이미지 캐러셀 (이미지 데이터는 spot.imageUrls 같은 필드에서 받아와야 함) */}
                 <Row className="my-5 d-flex justify-content-center">
                     <Col>
-                        <Carousel3 />
+                        <Carousel3 images={spot.imageUrls} />
                     </Col>
                 </Row>
 
-                {/* 상세정보 타이틀 */}
+                {/* 상세정보 */}
                 <Row className="t2 mb-4 pt-5" id="detail">
-                    <Col
-                        // xs="auto"
-                        style={{
-                            fontWeight: 'inherit',
-                            fontSize: '1.8rem',
-                            borderBottom: '2px solid #6DD2FF',
-                            paddingBottom: '4px',
-                        }}
-                    >
-                        상세정보
-                    </Col>
+                    <Col style={{ fontSize: '1.8rem', borderBottom: '2px solid #6DD2FF', paddingBottom: '4px' }}>상세정보</Col>
                 </Row>
-
-                {/* 본문 내용 */}
                 <Row>
-                    <Col
-                        style={{
-                            lineHeight: '1.8',
-                            fontSize: '1rem',
-                            fontFamily: '"Pretendard", sans-serif',
-                            display: expanded ? 'block' : '-webkit-box',
-                            WebkitLineClamp: expanded ? 'none' : 3, // 줄 수 조절
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                        }}
-                    >
-                        {fullText}
+                    <Col style={{ lineHeight: '1.8' }}>
+                        {/* DB의 detailDesc 필드 사용 */}
+                        {spot.detailDesc}
                     </Col>
                 </Row>
 
-                {fullText.length > shortText.length && (
-                    <Row className="mt-2">
-                        <Col className="d-flex justify-content-end">
-                            <span
-                                onClick={toggleContent}
-                                style={{
-                                    color: '#007bff',
-                                    cursor: 'pointer',
-                                    fontWeight: '500',
-                                }}
-                            >
-                                {expanded ? '내용 접기 ▲' : '내용 더보기 ▼'}
-                            </span>
-                        </Col>
-                    </Row>
-                )}
-
+                {/* 지도 (DB의 lat, lon 필드 사용) */}
                 <Row>
                     <Col>
-                        <Map lat={35.128749} lon={126.9698984} />
+                        <Map lat={spot.lat} lon={spot.lon} />
                     </Col>
                 </Row>
+
+                {/* 표 정보 (DB의 address, fee 등 필드 사용) */}
                 <Row>
                     <Col>
-                        <InfoSection />
+                        <InfoSection info={spot} />
                     </Col>
                 </Row>
-                <Row className="t2 mb-4 pt-5" id="detail">
-                    <Col
-                        style={{
-                            fontWeight: 'inherit',
-                            fontSize: '1.8rem',
-                            borderBottom: '2px solid #6DD2FF',
-                            paddingBottom: '4px',
-                        }}
-                    >
+
+                {/* 댓글 */}
+                <Row className="t2 mb-4 pt-5" id="comments">
+                    <Col style={{ fontSize: '1.8rem', borderBottom: '2px solid #6DD2FF', paddingBottom: '4px' }}>
                         댓글 <span style={{ color: '#6DD2FF' }}>({comments.length}개)</span>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <CommentForm onSubmit={addComment} />
+                        <CommentForm />
                     </Col>
                 </Row>
                 <Row>

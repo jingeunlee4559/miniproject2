@@ -1,75 +1,91 @@
 import React, { useState } from 'react';
 import '../css/Cnav.css';
 
-const Cnav = ({ onCategorySelect }) => {
-    const categories = [
-        {
-            category_p_name: '전라남도',
-            color: '#FF9F43',
-            sub: ['여수시', '광양시', '목포시', '나주시', '순천시', '담양군', '장성군', '함평군', '진도군', '화순군', '보성군', '해남군', '영광군'],
-        },
-        {
-            category_p_name: '광주광역시',
-            color: '#16A085',
-            sub: ['남구', '동구', '북구', '광산구', '서구'],
-        },
-        {
-            category_p_name: '제주도',
-            color: 'BLACK',
-            sub: ['제주시', '서귀포시'],
-        },
-    ];
-
+const Cnav = ({ regions, onCategorySelect }) => {
     const [openCategory, setOpenCategory] = useState(null);
 
-    const handleCategoryClick = (name) => {
-        // 1차 카테고리 클릭 시
-        setOpenCategory(openCategory === name ? null : name);
+    // 색상 매핑 (기존 디자인 유지)
+    const getColorForRegion = (regionName) => {
+        const colorMap = {
+            전라남도: '#FF9F43',
+            광주광역시: '#16A085',
+            제주도: 'BLACK',
+        };
+        return colorMap[regionName] || '#6c757d'; // 기본 색상
+    };
+
+    const handleRegion1Click = (region1) => {
+        const isCurrentlyOpen = openCategory === region1.id;
+
+        // 열려있던 것을 클릭하면 닫기, 아니면 열기
+        setOpenCategory(isCurrentlyOpen ? null : region1.id);
+
+        // 1차 지역 선택
         onCategorySelect({
-            category_idx: null,
-            category_p_name: name,
-            category_name: '', // 1차 선택이므로 비움
+            region1Id: region1.id,
+            region2Id: null,
+            region1Name: region1.name,
+            region2Name: '',
         });
     };
+
+    const handleRegion2Click = (region1, region2) => {
+        // 2차 지역 선택
+        onCategorySelect({
+            region1Id: region1.id,
+            region2Id: region2.id,
+            region1Name: region1.name,
+            region2Name: region2.name,
+        });
+    };
+
+    // 지역 데이터가 아직 로딩 중인 경우
+    if (!regions || regions.length === 0) {
+        return (
+            <div className="cnav-container">
+                <div className="first-category-row">
+                    <div>지역 정보 로딩 중...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="cnav-container">
             {/* 1차 카테고리 버튼 */}
             <div className="first-category-row">
-                {categories.map((cat, idx) => (
+                {regions.map((region1) => (
                     <button
-                        key={idx}
-                        className={`first-category-btn ${openCategory === cat.category_p_name ? 'active' : ''}`}
+                        key={region1.id}
+                        className={`first-category-btn ${openCategory === region1.id ? 'active' : ''}`}
                         style={{
-                            backgroundColor: openCategory === cat.category_p_name ? cat.color : '#f1f1f1',
-                            color: openCategory === cat.category_p_name ? 'white' : '#333',
+                            backgroundColor: openCategory === region1.id ? getColorForRegion(region1.name) : '#f1f1f1',
+                            color: openCategory === region1.id ? 'white' : '#333',
                         }}
-                        onClick={() => handleCategoryClick(cat.category_p_name)}
+                        onClick={() => handleRegion1Click(region1)}
                     >
-                        {cat.category_p_name}
+                        {region1.name}
                     </button>
                 ))}
             </div>
 
             {/* 2차 카테고리 영역 */}
-            {categories.map(
-                (cat, idx) =>
-                    openCategory === cat.category_p_name && (
-                        <div key={idx} className="second-category-container">
-                            {cat.sub.map((subName, i) => (
+            {regions.map(
+                (region1) =>
+                    openCategory === region1.id &&
+                    region1.region2s &&
+                    region1.region2s.length > 0 && (
+                        <div key={region1.id} className="second-category-container">
+                            {region1.region2s.map((region2) => (
                                 <div
-                                    key={i}
+                                    key={region2.id}
                                     className="second-category-card"
-                                    style={{ borderTop: `3px solid ${cat.color}` }}
-                                    onClick={() =>
-                                        onCategorySelect({
-                                            category_idx: i + 1,
-                                            category_p_name: cat.category_p_name,
-                                            category_name: subName,
-                                        })
-                                    }
+                                    style={{
+                                        borderTop: `3px solid ${getColorForRegion(region1.name)}`,
+                                    }}
+                                    onClick={() => handleRegion2Click(region1, region2)}
                                 >
-                                    {subName}
+                                    {region2.name}
                                 </div>
                             ))}
                         </div>

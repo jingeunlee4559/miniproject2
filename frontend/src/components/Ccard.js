@@ -17,7 +17,7 @@ const Ccard = ({ store_img, store, store_idx, store_info, price, positivePercent
     return (
         <Col xs={12} sm={6} md={6} lg={3} xl={3} className="mb-4">
             <Card className="product-card">
-                <Link to={`/Category/${store_idx}`}>
+                <Link to={`/category/${store_idx}`}>
                     <Card.Img variant="top" src={store_img} alt="Product" className="product-image" />
                 </Link>
                 <Card.Body className="card-body-custom">

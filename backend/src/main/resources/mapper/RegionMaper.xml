@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.backend.mapper.RegionMapper">
+
+    <resultMap id="region1Map" type="com.example.backend.model.Region1">
+        <id property="id" column="region1_id"/>
+        <result property="name" column="region1_name"/>
+        <collection property="region2s" ofType="com.example.backend.model.Region2">
+            <id property="id" column="region2_id"/>
+            <result property="name" column="region2_name"/>
+            <association property="region1" javaType="com.example.backend.model.Region1">
+                <id property="id" column="region1_id"/>
+                <result property="name" column="region1_name"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="findAllRegions" resultMap="region1Map">
+        SELECT 
+            r1.region1_id,
+            r1.name as region1_name,
+            r2.region2_id,
+            r2.name as region2_name
+        FROM region1 r1
+        LEFT JOIN region2 r2 ON r1.region1_id = r2.region1_id
+        ORDER BY r1.region1_id, r2.region2_id
+    </select>
+
+</mapper>
