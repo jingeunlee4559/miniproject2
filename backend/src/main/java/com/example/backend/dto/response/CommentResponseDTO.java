@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentResponseDTO {
-    private Long comment_id;
+    private Long comment_seq;
     private String comment_content;
     private String mem_id;
     private String mem_name;
@@ -21,7 +21,7 @@ public class CommentResponseDTO {
 
     public static CommentResponseDTO of(Comments comment, String mem_name) {
         CommentResponseDTO dto = new CommentResponseDTO();
-        dto.setComment_id(comment.getComment_seq());
+        dto.setComment_seq(comment.getComment_seq());
         dto.setComment_content(comment.getComment_content());
         dto.setMem_id(comment.getMem_id());
         dto.setMem_name(mem_name);

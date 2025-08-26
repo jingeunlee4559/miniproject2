@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.backend.Security.CustomUserDetails;
+import com.example.backend.Security.CustomUserDetailsService;
 import com.example.backend.dto.request.Member.*;
 import com.example.backend.dto.response.*;
 import com.example.backend.model.*;
@@ -18,6 +25,9 @@ public class MemberService {
     @Autowired
     private MemberMapper memberMapper;
 
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+    
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -78,19 +88,29 @@ public class MemberService {
     }
 
     public MemberInfoResponseDTO login(MemberLoginRequestDTO requestDTO) {
-        Member member = memberMapper.findById(requestDTO.getMem_id());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(requestDTO.getMem_id());
 
-        if (member == null) {
-            return null;
-        }
-        if (!passwordEncoder.matches(requestDTO.getMem_pw(), member.getMem_pw())) {
-            return null;
-        }
-        if (member.getMem_status() != MemberStatus.ACTIVE) {
-            return null;
+        if (!passwordEncoder.matches(requestDTO.getMem_pw(), userDetails.getPassword())) {
+            throw new BadCredentialsException("비밀번호 불일치") ;
         }
 
-        return MemberInfoResponseDTO.from(member);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, 
+                null, 
+                userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 로그 추가 부분
+            System.out.println("==========================================================");
+            System.out.println("[로그] SecurityContextHolder에 인증 정보 저장 성공");
+            System.out.println("저장된 Authentication 객체: " +
+ SecurityContextHolder.getContext().getAuthentication());
+            System.out.println("인증된 사용자: " + userDetails.getUsername());
+            System.out.println("사용자 권한: " + userDetails.getAuthorities());
+            System.out.println("==========================================================");
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        
+        return MemberInfoResponseDTO.from(customUserDetails.getMember());
     }
 
     public boolean verifyPassword(String mem_id, String rawPassword) {
