@@ -2,7 +2,6 @@ package com.example.backend.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.example.backend.dto.request.*;
 import com.example.backend.dto.request.Member.MemberRegisterRequestDTO;
 
 import lombok.AllArgsConstructor;

@@ -74,7 +74,7 @@ function Board() {
                                 index: cnt + 1,
                                 board_seq: board.board_seq,
                                 id: board.mem_id,
-                                time: board.board_at.substring(0, 10),
+                                time: board.created_at.substring(0, 10),
                                 board_title: board.board_title,
                                 view: board.board_views,
                             }))}

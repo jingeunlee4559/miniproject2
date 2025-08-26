@@ -19,12 +19,12 @@ public class CommentResponseDTO {
     private boolean isEditable;
     private boolean isDeletable;
 
-    public static CommentResponseDTO of(Comments comment, Member member) {
+    public static CommentResponseDTO of(Comments comment, String mem_name) {
         CommentResponseDTO dto = new CommentResponseDTO();
         dto.setComment_id(comment.getComment_seq());
         dto.setComment_content(comment.getComment_content());
         dto.setMem_id(comment.getMem_id());
-        dto.setMem_name(member.getMem_name());
+        dto.setMem_name(mem_name);
         dto.setCreated_at(comment.getCreated_at());
         return dto;
     }

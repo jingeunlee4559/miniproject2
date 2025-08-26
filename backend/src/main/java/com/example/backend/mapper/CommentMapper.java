@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.backend.model.Comments;
+import com.example.backend.model.TargetType;
 
 @Mapper
 public interface CommentMapper {
@@ -17,5 +18,5 @@ public interface CommentMapper {
 
     Comments findBySeq(Long comment_seq);
 
-    List<Comments> findByBoardSeq(Long board_seq);
+    List<Comments> findByTargetSeq(TargetType target_type, Long target_seq);
 }

@@ -8,7 +8,8 @@
 <select id="getAllBoards" resultType="com.example.backend.model.Board"> 
     SELECT * 
     FROM BOARD 
-    WHERE board_deleted = 0
+    WHERE deleted_at IS NULL
+    ORDER BY created_at DESC, board_seq DESC
 </select>
 
 <insert id="createBoard">
@@ -27,7 +28,7 @@ INSERT INTO BOARD (
     UPDATE BOARD
     SET board_title = #{board_title},
         board_content = #{board_content},
-        update_at = SYSDATE,
+        updated_at = SYSDATE,
         original_fileName = #{original_fileName, jdbcType=VARCHAR},
         stored_fileName = #{stored_fileName, jdbcType=VARCHAR}
     WHERE board_seq = #{board_seq}
@@ -35,12 +36,12 @@ INSERT INTO BOARD (
 
 <update id="deleteBoard" parameterType="long">
     UPDATE BOARD
-    SET board_deleted = 1
+    SET deleted_at = SYSDATE
     WHERE board_seq = #{board_seq}
 </update>
 
 <select id="findBoardBySeq" parameterType="long" resultType="com.example.backend.model.Board">
-    SELECT board_seq, mem_id, board_title, board_content, create_at, board_views
+    SELECT board_seq, board_title, board_content, mem_id, created_at, updated_at, board_views, original_fileName, stored_fileName
     FROM BOARD
     WHERE board_seq = #{board_seq}
 </select>
