@@ -39,9 +39,9 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO requestDTO) {
-        MemberInfoResponseDTO responseDTO = memberService.login(requestDTO);
-        return ResponseEntity.ok("로그인 성공");
+    public ResponseEntity<?> login(@RequestBody MemberLoginRequestDTO requestDTO, HttpServletRequest request) {
+        MemberInfoResponseDTO responseDTO = memberService.login(requestDTO, request);
+        return ResponseEntity.ok(responseDTO);
     }
 
     // // 로그아웃

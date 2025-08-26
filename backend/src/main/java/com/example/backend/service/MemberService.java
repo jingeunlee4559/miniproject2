@@ -17,6 +17,9 @@ import com.example.backend.Security.CustomUserDetailsService;
 import com.example.backend.dto.request.Member.*;
 import com.example.backend.dto.response.*;
 import com.example.backend.model.*;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.example.backend.mapper.MemberMapper;
 
 @Service
@@ -27,7 +30,7 @@ public class MemberService {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
-    
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -87,29 +90,31 @@ public class MemberService {
         return memberMapper.checkId(mem_id) == 0;
     }
 
-    public MemberInfoResponseDTO login(MemberLoginRequestDTO requestDTO) {
+    public MemberInfoResponseDTO login(MemberLoginRequestDTO requestDTO, HttpServletRequest request) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(requestDTO.getMem_id());
 
         if (!passwordEncoder.matches(requestDTO.getMem_pw(), userDetails.getPassword())) {
-            throw new BadCredentialsException("비밀번호 불일치") ;
+            throw new BadCredentialsException("비밀번호 불일치");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, 
-                null, 
+                userDetails,
+                null,
                 userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-            // 로그 추가 부분
-            System.out.println("==========================================================");
-            System.out.println("[로그] SecurityContextHolder에 인증 정보 저장 성공");
-            System.out.println("저장된 Authentication 객체: " +
- SecurityContextHolder.getContext().getAuthentication());
-            System.out.println("인증된 사용자: " + userDetails.getUsername());
-            System.out.println("사용자 권한: " + userDetails.getAuthorities());
-            System.out.println("==========================================================");
+        request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+        // 로그 추가 부분
+        System.out.println("==========================================================");
+        System.out.println("[로그] SecurityContextHolder에 인증 정보 저장 성공");
+        System.out.println("저장된 Authentication 객체: " +
+                SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("인증된 사용자: " + userDetails.getUsername());
+        System.out.println("사용자 권한: " + userDetails.getAuthorities());
+        System.out.println("==========================================================");
         CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
-        
+
         return MemberInfoResponseDTO.from(customUserDetails.getMember());
     }
 
