@@ -60,8 +60,7 @@ public class CommentController {
             @PathVariable Long commentSeq,
             @RequestBody CommentUpdateRequestDTO requestDto,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-        commentService.updateComment(loginMember.getMem_id(), commentSeq, requestDto);
+        commentService.updateComment(currentUser.getUsername(), commentSeq, requestDto);
         return ResponseEntity.ok("댓글이 성공적으로 수정되었습니다.");
     }
 
