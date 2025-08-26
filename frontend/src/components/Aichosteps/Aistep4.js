@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../axios';
 import { Appdata } from '../../App';
 import '../../css/Aichost.css';
+import Maps from '../Maps';
+import TravelSlide from './TravelSlide';
 
 // 가격을 콤마로 포맷팅하는 함수
 // const formatPrice = (price) => {
@@ -36,6 +38,8 @@ const InfoCard = ({ title, item }) => (
 
 // Aistep4 컴포넌트
 const Aistep4 = () => {
+    const datas = useContext(Appdata);
+    const choiceone = 1;
     let mem_id = window.sessionStorage.getItem('mem_id');
     const [travelItems, setTravelItems] = useState([
         {
@@ -129,14 +133,31 @@ const Aistep4 = () => {
 
     return (
         <Container className="my-3">
-            <Row className="justify-content-center">
-                <Col md={8} sm={10} xs={12}>
-                    {travelItems.map((item, idx) => (
-                        <InfoCard key={idx} title={`여행지 ${idx + 1}`} item={item} />
-                    ))}
-                </Col>
-            </Row>
-            <Row className="text-center mt-3">
+            {choiceone !== 0 ? (
+                <>
+                    <Row>
+                        <Col>
+                            <Maps />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <TravelSlide />
+                        </Col>
+                    </Row>
+                </>
+            ) : (
+                <>
+                    <Row className="justify-content-center">
+                        <Col md={8} sm={10} xs={12}>
+                            {travelItems.map((item, idx) => (
+                                <InfoCard key={idx} title={`여행지 ${idx + 1}`} item={item} />
+                            ))}
+                        </Col>
+                    </Row>
+                </>
+            )}
+            <Row className="text-center mt-4">
                 <Col>
                     <Button onClick={handleBack} className="me-2 btnsfail">
                         취소

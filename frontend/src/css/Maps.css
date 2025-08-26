@@ -1,0 +1,36 @@
+.marker-number {
+    background: #ff5a5f;
+    color: white;
+    padding: 4px 7px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.custom-overlay {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    min-width: 180px;
+}
+
+.overlay-content h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.overlay-content p {
+    margin: 5px 0 0 0;
+    font-size: 12px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #999;
+}

@@ -56,18 +56,16 @@ const Aistep1 = () => {
                             <Col className="Qti2 text-center">여행을 원하는 지역을 선택 해주세요</Col>
                         </Row>
                         <Row className="my-2">
-                            <Col className="Qtit3 text-center">출발하는 지역을 선택해주세요</Col>
+                            <Col className="Qtit3 text-center">목적지를 선택해주세요</Col>
                         </Row>
 
                         <Row>
                             <Col md={11} sm={10} xs={10} className="m-auto">
                                 <Form.Select ref={lrefs}>
                                     <option value="">선택하세요</option>
-                                    <option value="35.1329295, 126.902357">서울</option>
-                                    <option value="35.1519278, 126.8902034">부산</option>
-                                    <option value="35.1742068, 126.912188">인천</option>
-                                    <option value="35.1459525, 126.9231488">대구</option>
-                                    <option value="35.1395924, 126.7937701">제주도</option>
+                                    <option value="광주광역시">광주</option>
+                                    <option value="전라남도">전남</option>
+                                    <option value="제주도">제주도</option>
                                 </Form.Select>
                             </Col>
                         </Row>
@@ -79,10 +77,10 @@ const Aistep1 = () => {
                             <Col md={11} sm={10} xs={10} className="m-auto">
                                 <Form.Select ref={srefs}>
                                     <option value="">선택하세요</option>
-                                    <option value="35.1329295, 126.902357">봄</option>
-                                    <option value="35.1519278, 126.8902034">여름</option>
-                                    <option value="35.1742068, 126.912188">가을</option>
-                                    <option value="35.1459525, 126.9231488">겨울</option>
+                                    <option value="봄">봄</option>
+                                    <option value="여름">여름</option>
+                                    <option value="가을">가을</option>
+                                    <option value="겨울">겨울</option>
                                 </Form.Select>
                             </Col>
                         </Row>
