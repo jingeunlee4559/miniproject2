@@ -37,7 +37,9 @@ function Login() {
                             text: `${data.mem_name}님 반갑습니다!`,
                             confirmButtonText: '확인',
                         }).then((result) => {
-                            if (result.isConfirmed) {
+                            if (data.mem_role === 'ADMIN') {
+                                window.location.href = '/admin'; // 관리자 페이지로 리다이렉트
+                            } else {
                                 window.location.href = '../'; // 메인 페이지로 리다이렉트
                             }
                         });
