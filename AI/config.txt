@@ -1,0 +1,4 @@
+persist_dir=vector_db_large
+collection_name=jeju-travel
+embedding_model=text-embedding-3-large
+json_path=preprocessing\preprocessed_jeju.json
