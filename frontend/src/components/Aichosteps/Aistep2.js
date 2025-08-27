@@ -56,16 +56,16 @@ const Aistep2 = () => {
                         {/* 여행지 / 코스 선택 */}
                         <Row className="my-2">
                             <Col md={11} sm={10} xs={10} className="m-auto">
-                                <Form.Select value={q2Choice} onChange={(e) => setQ2Choice(e.target.value)}>
+                                <Form.Select value={q2Choice} onChange={(e) => setQ2Choice(e.target.value === 'true')}>
                                     <option value="">선택하세요</option>
-                                    <option value="travel">여행지 추천</option>
-                                    <option value="course">코스 추천</option>
+                                    <option value="true">여행지 추천</option>
+                                    <option value="false">코스 추천</option>
                                 </Form.Select>
                             </Col>
                         </Row>
 
                         {/* 코스 세부 선택 (코스 선택 시만 보이도록) */}
-                        {q2Choice === 'course' && (
+                        {q2Choice === false && (
                             <Row className="my-2">
                                 <Col md={11} sm={10} xs={10} className="m-auto">
                                     <Form.Select value={q2SubChoice} onChange={(e) => setQ2SubChoice(e.target.value)}>

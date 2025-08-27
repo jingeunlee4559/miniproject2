@@ -6,7 +6,7 @@
 <mapper namespace="com.example.backend.mapper.CommentMapper">
 
     <!-- 1. 댓글 생성 (createComment) -->
-    <insert id="createComment" parameterType="com.example.backend.model.Comment" useGeneratedKeys="true" keyProperty="comment_seq">
+    <insert id="createComment" parameterType="com.example.backend.model.Comments" useGeneratedKeys="true" keyProperty="comment_seq">
         INSERT INTO COMMENTS (
             target_type,
             target_seq, 
@@ -58,7 +58,7 @@
     </select>
 
     <!-- 5. 게시글 ID로 댓글 목록 조회 (findByBoardSeq) -->
-    <select id="findByBoardSeq" resultType="com.example.backend.model.Comment">
+    <select id="findByBoardSeq" resultType="com.example.backend.model.Comments">
         SELECT 
             comment_seq,
             target_type,
@@ -78,4 +78,3 @@
     </select>
 
 </mapper>
-apper>apper>

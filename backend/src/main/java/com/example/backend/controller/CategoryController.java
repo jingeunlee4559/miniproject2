@@ -58,14 +58,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDetailResponse> getTravelSpotById(@PathVariable Long id) {
+    public ResponseEntity<CategoryDetailResponse> getTravelSpotById(@PathVariable("id") Long id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/view")
-    public ResponseEntity<Void> incrementViewCount(@PathVariable Long id) {
+    public ResponseEntity<Void> incrementViewCount(@PathVariable("id") Long id) {
         categoryService.incrementViewCount(id);
         return ResponseEntity.ok().build();
     }

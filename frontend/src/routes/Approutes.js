@@ -38,7 +38,7 @@ function Approutes() {
                 <Route path="/writepost" element={<WritePost />} />
                 <Route path="/category" element={<Category />} />
                 <Route path="/board/:board_seq" element={<DetailPage />} />
-                <Route path="/Category/:store_idx" element={<Categorydetail />} />
+                <Route path="/category/:store_idx" element={<Categorydetail />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/FindIDPW" element={<FindIDPW />} />
             </Route>

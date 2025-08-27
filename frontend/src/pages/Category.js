@@ -167,29 +167,52 @@ const Category = () => {
             {totalPages > 1 && (
                 <div className="pagination-container d-flex justify-content-center align-items-center mt-3">
                     <ButtonGroup>
+                        {/* 첫 페이지로 이동 */}
                         <Button onClick={() => gotoPage(0)} disabled={currentPage === 0} variant="primary" size="sm">
                             {'<<'}
                         </Button>
+
+                        {/* 이전 페이지 */}
                         <Button onClick={previousPage} disabled={currentPage === 0} variant="primary" size="sm">
                             이전
                         </Button>
-                        {Array.from({ length: totalPages }, (_, i) => (
-                            <Button
-                                key={i}
-                                onClick={() => gotoPage(i)}
-                                variant="light"
-                                size="sm"
-                                style={{
-                                    backgroundColor: currentPage === i ? '#16A085' : 'lightgray',
-                                    color: currentPage === i ? 'white' : 'black',
-                                }}
-                            >
-                                {i + 1}
-                            </Button>
-                        ))}
+
+                        {/* 페이지 번호 그룹 계산 */}
+                        {(() => {
+                            const pageGroupSize = 5; // 한 번에 보여줄 페이지 수
+                            const currentGroup = Math.floor(currentPage / pageGroupSize);
+                            const startPage = currentGroup * pageGroupSize;
+                            const endPage = Math.min(startPage + pageGroupSize - 1, totalPages - 1);
+
+                            const pages = [];
+
+                            // 현재 그룹의 페이지 번호들
+                            for (let i = startPage; i <= endPage; i++) {
+                                pages.push(
+                                    <Button
+                                        key={i}
+                                        onClick={() => gotoPage(i)}
+                                        variant="light"
+                                        size="sm"
+                                        style={{
+                                            backgroundColor: currentPage === i ? '#16A085' : 'lightgray',
+                                            color: currentPage === i ? 'white' : 'black',
+                                        }}
+                                    >
+                                        {i + 1}
+                                    </Button>,
+                                );
+                            }
+
+                            return pages;
+                        })()}
+
+                        {/* 다음 페이지 */}
                         <Button onClick={nextPage} disabled={currentPage === totalPages - 1} variant="primary" size="sm">
                             다음
                         </Button>
+
+                        {/* 마지막 페이지로 이동 */}
                         <Button onClick={() => gotoPage(totalPages - 1)} disabled={currentPage === totalPages - 1} variant="primary" size="sm">
                             {'>>'}
                         </Button>

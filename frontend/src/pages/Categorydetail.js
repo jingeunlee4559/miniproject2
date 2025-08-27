@@ -9,7 +9,7 @@ import CommentForm from '../components/CommentForm'; // 댓글 입력 폼
 import CommentList from '../components/CommentList'; // 댓글 목록
 
 function Categorydetail() {
-    // URL 경로에서 ID 값을 가져옵니다 (예: /category/97 -> id는 97)
+    // URL 경로에서 ID 값을 가져옵니다 (예: /category/97 -> store_idx는 97)
     const { store_idx } = useParams();
     // 백엔드에서 받아온 여행지 상세 정보를 저장할 상태
     const [spot, setSpot] = useState(null);
@@ -21,25 +21,31 @@ function Categorydetail() {
 
     // 페이지가 로딩될 때 실행되는 로직
     useEffect(() => {
-        const detailUrl = `/api/category/${store_idx}`;
-        const viewUrl = `/api/category/${store_idx}/view`;
+        const detailUrl = `http://localhost:8090/api/category/${store_idx}`;
+        const viewUrl = `http://localhost:8090/api/category/${store_idx}/view`;
+
+        console.log('API 호출 URL:', detailUrl);
+        console.log('조회수 증가 URL:', viewUrl);
 
         // 1. 상세 정보 조회 API 호출 (GET 요청)
         axios
             .get(detailUrl)
             .then((response) => {
+                console.log('상세 정보 응답:', response.data);
                 setSpot(response.data);
             })
             .catch((error) => {
                 console.error('상세 정보 로딩 실패:', error);
+                console.error('에러 상세:', error.response);
             })
             .finally(() => {
                 setLoading(false);
             });
 
-        // 2. 조회수 증가 API 호출 (PUT 요청)
-        axios.put(`${viewUrl}/view`).catch((error) => console.error('조회수 증가 요청 실패:', error));
-    }, [store_idx]); // id 값이 바뀔 때마다 이 effect가 다시 실행됩니다.
+        // 2. 조회수 증가 API 호출 (PUT 요청) - URL 수정
+        axios.put(viewUrl).catch((error) => console.error('조회수 증가 요청 실패:', error));
+        console.log('상세 정보 응답:', spot);
+    }, [store_idx]); // store_idx 값이 바뀔 때마다 이 effect가 다시 실행됩니다.
 
     // 로딩 중일 때 보여줄 화면
     if (loading) {
@@ -71,22 +77,41 @@ function Categorydetail() {
 
                 {/* 위치 정보 */}
                 <Row>
-                    <Col style={{ color: 'gray' }}>
-                        {spot.region1Name} &gt; {spot.region2Name}
-                    </Col>
+                    <Col style={{ color: 'gray' }}>{spot.region1Name && spot.region2Name ? `${spot.region1Name} > ${spot.region2Name}` : spot.address}</Col>
+                </Row>
+
+                {/* 조회수 */}
+                <Row className="mt-2">
+                    <Col style={{ color: '#888', fontSize: '0.9rem' }}>👁️ 조회수: {spot.viewCount || 0}</Col>
                 </Row>
 
                 {/* 요약 설명 */}
                 <Row className="mt-3 mb-4">
                     <Col style={{ paddingBottom: '4px' }}>
-                        <span style={{ borderBottom: '2px solid #6DD2FF', paddingBottom: '2px', fontWeight: '500' }}>{spot.shortDesc}</span>
+                        <span style={{ borderBottom: '2px solid #6DD2FF', paddingBottom: '2px', fontWeight: '500' }}>{spot.shortDesc || '여행지 소개'}</span>
                     </Col>
                 </Row>
 
-                {/* 이미지 캐러셀 (이미지 데이터는 spot.imageUrls 같은 필드에서 받아와야 함) */}
+                {/* 이미지 캐러셀 */}
                 <Row className="my-5 d-flex justify-content-center">
                     <Col>
-                        <Carousel3 images={spot.imageUrls} />
+                        {spot.imageUrls && spot.imageUrls.length > 0 ? (
+                            <Carousel3 images={spot.imageUrls} />
+                        ) : (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '400px',
+                                    backgroundColor: '#f8f9fa',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: '8px',
+                                }}
+                            >
+                                <span style={{ color: '#6c757d' }}>이미지가 없습니다</span>
+                            </div>
+                        )}
                     </Col>
                 </Row>
 
@@ -95,24 +120,21 @@ function Categorydetail() {
                     <Col style={{ fontSize: '1.8rem', borderBottom: '2px solid #6DD2FF', paddingBottom: '4px' }}>상세정보</Col>
                 </Row>
                 <Row>
-                    <Col style={{ lineHeight: '1.8' }}>
-                        {/* DB의 detailDesc 필드 사용 */}
-                        {spot.detailDesc}
-                    </Col>
+                    <Col style={{ lineHeight: '1.8', fontSize: '1rem', fontFamily: '"Pretendard", sans-serif' }}>{spot.detailDesc || spot.shortDesc || '상세 정보가 없습니다.'}</Col>
                 </Row>
 
-                {/* 지도 (DB의 lat, lon 필드 사용) */}
-                <Row>
-                    <Col>
-                        <Map lat={spot.lat} lon={spot.lon} />
-                    </Col>
-                </Row>
+                {/* 지도 */}
+                {spot.lat && spot.lon && (
+                    <Row>
+                        <Col>
+                            <Map lat={spot.lat} lon={spot.lon} />
+                        </Col>
+                    </Row>
+                )}
 
-                {/* 표 정보 (DB의 address, fee 등 필드 사용) */}
+                {/* 표 정보 */}
                 <Row>
-                    <Col>
-                        <InfoSection info={spot} />
-                    </Col>
+                    <Col>{spot && <InfoSection info={spot} />}</Col>
                 </Row>
 
                 {/* 댓글 */}

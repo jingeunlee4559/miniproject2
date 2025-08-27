@@ -13,8 +13,14 @@ public class Category {
     private String address;
     private int viewCount;
     private String imageUrl;
-    // ... travel_spot 테이블의 나머지 모든 필드 추가 (lat, lon, fee 등)
+    private String extraInfo;
     private Region2 region2;
+    private double lat;
+    private double lon;
+    private String fee;
+    private String openingHours;
+    private String holiday;
+    private String parkingAvailable;
 }
 
     

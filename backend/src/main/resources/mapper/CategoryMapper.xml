@@ -4,6 +4,64 @@
 
 <mapper namespace="com.example.backend.mapper.CategoryMapper">
 
+    <!-- [수정 1] resultMap이 테이블의 모든 컬럼을 DTO 필드에 매핑하도록 수정합니다. -->
+    <resultMap id="CategoryDetailResultMap" type="com.example.backend.dto.response.CategoryDetailResponse">
+        <id property="id" column="spot_id"/> 
+        <result property="name" column="name"/>
+        <result property="shortDesc" column="short_desc"/>
+        <result property="detailDesc" column="detail_desc" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="address" column="address"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="lat" column="lat"/>
+        <result property="lon" column="lon"/>
+        <result property="region1Name" column="region1Name"/>
+        <result property="region2Name" column="region2Name"/>
+        <result property="fee" column="fee"/>
+        <result property="openingHours" column="opening_hours"/>
+        <result property="holiday" column="holiday"/>
+        <result property="parkingAvailable" column="parking_available"/>
+        <result property="extraInfo" column="extra_info"/>
+
+        <collection property="imageUrls" ofType="String" column="spot_id" select="selectImageUrls"/>
+    </resultMap>
+
+    <!-- [수정 2] findById 쿼리가 테이블의 모든 컬럼을 조회하도록 수정합니다. -->
+    <select id="findById" resultMap="CategoryDetailResultMap">
+        SELECT
+            ts.spot_id,
+            ts.name,
+            ts.short_desc,
+            ts.detail_desc,
+            ts.address,
+            ts.view_count,
+            ts.lat,
+            ts.lon,
+            ts.fee,
+            ts.opening_hours,
+            ts.holiday,
+            ts.parking_available,
+            r1.name AS region1Name,
+            r2.name AS region2Name,
+            ts.extra_info
+        FROM
+            travel_spot ts
+        LEFT JOIN
+            region2 r2 ON ts.region2_id = r2.region2_id
+        LEFT JOIN
+            region1 r1 ON r2.region1_id = r1.region1_id
+        WHERE
+            ts.spot_id = #{id}
+    </select>
+
+    <!-- 추가 이미지들 조회 -->
+    <select id="selectImageUrls" resultType="String">
+    SELECT image_url 
+    FROM travel_spot_image 
+    WHERE spot_id = #{spot_id}
+    ORDER BY image_id
+    </select>
+    
+    <!-- (이하 다른 쿼리들은 기존 코드를 그대로 유지하시면 됩니다) -->
     <select id="findAll" resultType="com.example.backend.dto.response.CategorySimpleResponse">
         SELECT 
             spot_id as id,
@@ -42,56 +100,21 @@
         WHERE region2_id = #{region2Id}
         ORDER BY view_count DESC
     </select>
-
-   <select id="findById" resultType="com.example.backend.dto.response.CategoryDetailResponse">
-        SELECT
-            ts.spot_id AS id,
-            ts.name,
-            ts.short_desc AS shortDesc,
-            ts.detail_desc AS detailDesc,
-            ts.address,
-            ts.fee,
-            ts.opening_hours AS openingHours,
-            ts.holiday,
-            ts.parking_available AS parkingAvailable,
-            ts.view_count AS viewCount,
-            ts.image_url AS imageUrl,
-            ts.lat,
-            ts.lon,
-            r1.name AS region1Name,
-            r2.name AS region2Name
-        FROM
-            travel_spot ts
-        JOIN
-            region2 r2 ON ts.region2_id = r2.region2_id
-        JOIN
-            region1 r1 ON r2.region1_id = r1.region1_id
-        WHERE
-            ts.spot_id = #{id}
-    </select>
-
+    
     <update id="incrementViewCount">
         UPDATE travel_spot 
         SET view_count = view_count + 1 
         WHERE spot_id = #{id}
     </update>
 
-        <select id="searchByKeyword" resultType="com.example.backend.dto.response.CategorySimpleResponse">
+    <select id="searchByKeyword" resultType="com.example.backend.dto.response.CategorySimpleResponse">
         SELECT 
             spot_id as id,
             name,
             short_desc as shortDesc,
             image_url as imageUrl,
             address,
-            view_count as viewCount,
-            CASE 
-                WHEN UPPER(name) = UPPER(#{keyword}) THEN 1
-                WHEN UPPER(name) LIKE UPPER(#{keyword}) || '%' THEN 2
-                WHEN UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
-                WHEN UPPER(short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
-                WHEN UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
-                ELSE 6
-            END as search_priority
+            view_count as viewCount
         FROM travel_spot
         WHERE (
             UPPER(name) LIKE '%' || UPPER(#{keyword}) || '%'
@@ -99,7 +122,16 @@
             OR UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%'
             OR UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%'
         )
-        ORDER BY search_priority, view_count DESC
+        ORDER BY 
+            CASE 
+                WHEN UPPER(name) = UPPER(#{keyword}) THEN 1
+                WHEN UPPER(name) LIKE UPPER(#{keyword}) || '%' THEN 2
+                WHEN UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
+                WHEN UPPER(short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
+                WHEN UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
+                ELSE 6
+            END, 
+            view_count DESC
     </select>
 
     <select id="searchByKeywordAndRegion1" resultType="com.example.backend.dto.response.CategorySimpleResponse">
@@ -109,15 +141,7 @@
             ts.short_desc as shortDesc,
             ts.image_url as imageUrl,
             ts.address,
-            ts.view_count as viewCount,
-            CASE 
-                WHEN UPPER(ts.name) = UPPER(#{keyword}) THEN 1
-                WHEN UPPER(ts.name) LIKE UPPER(#{keyword}) || '%' THEN 2
-                WHEN UPPER(ts.address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
-                WHEN UPPER(ts.short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
-                WHEN UPPER(ts.detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
-                ELSE 6
-            END as search_priority
+            ts.view_count as viewCount
         FROM travel_spot ts
         INNER JOIN region2 r2 ON ts.region2_id = r2.region2_id
         WHERE r2.region1_id = #{region1Id}
@@ -127,7 +151,16 @@
             OR UPPER(ts.detail_desc) LIKE '%' || UPPER(#{keyword}) || '%'
             OR UPPER(ts.address) LIKE '%' || UPPER(#{keyword}) || '%'
         )
-        ORDER BY search_priority, ts.view_count DESC
+        ORDER BY 
+            CASE 
+                WHEN UPPER(ts.name) = UPPER(#{keyword}) THEN 1
+                WHEN UPPER(ts.name) LIKE UPPER(#{keyword}) || '%' THEN 2
+                WHEN UPPER(ts.address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
+                WHEN UPPER(ts.short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
+                WHEN UPPER(ts.detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
+                ELSE 6
+            END, 
+            ts.view_count DESC
     </select>
 
     <select id="searchByKeywordAndRegion2" resultType="com.example.backend.dto.response.CategorySimpleResponse">
@@ -137,15 +170,7 @@
             short_desc as shortDesc,
             image_url as imageUrl,
             address,
-            view_count as viewCount,
-            CASE 
-                WHEN UPPER(name) = UPPER(#{keyword}) THEN 1
-                WHEN UPPER(name) LIKE UPPER(#{keyword}) || '%' THEN 2
-                WHEN UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
-                WHEN UPPER(short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
-                WHEN UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
-                ELSE 6
-            END as search_priority
+            view_count as viewCount
         FROM travel_spot
         WHERE region2_id = #{region2Id}
         AND (
@@ -154,7 +179,16 @@
             OR UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%'
             OR UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%'
         )
-        ORDER BY search_priority, view_count DESC
+        ORDER BY 
+            CASE 
+                WHEN UPPER(name) = UPPER(#{keyword}) THEN 1
+                WHEN UPPER(name) LIKE UPPER(#{keyword}) || '%' THEN 2
+                WHEN UPPER(address) LIKE '%' || UPPER(#{keyword}) || '%' THEN 3
+                WHEN UPPER(short_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 4
+                WHEN UPPER(detail_desc) LIKE '%' || UPPER(#{keyword}) || '%' THEN 5
+                ELSE 6
+            END, 
+            view_count DESC
     </select>
 
 </mapper>
