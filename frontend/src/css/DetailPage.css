@@ -46,7 +46,7 @@
 /* 수정/삭제 버튼 그룹 */
 .button-group {
     position: absolute;
-    top: -50px;
+    top: -60px;
     right: 0;
     display: flex;
     gap: 10px;
@@ -106,7 +106,7 @@
     }
 
     .button-group {
-        top: -40px;
+        top: -60px;
     }
 
     .detail-title {
