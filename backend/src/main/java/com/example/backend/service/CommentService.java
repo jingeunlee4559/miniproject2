@@ -3,7 +3,6 @@ package com.example.backend.service;
 import com.example.backend.dto.request.Comment.*;
 import com.example.backend.dto.response.CommentResponseDTO;
 import com.example.backend.dto.response.MemberInfoResponseDTO;
-import com.example.backend.mapper.BoardMapper;
 import com.example.backend.mapper.CommentMapper;
 import com.example.backend.mapper.MemberMapper;
 import com.example.backend.model.Comments;
@@ -12,9 +11,9 @@ import com.example.backend.model.MemberRole;
 import com.example.backend.model.TargetType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +30,8 @@ public class CommentService {
     @Autowired
     private MemberMapper memberMapper;
 
-    public CommentResponseDTO createComment(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember, CommentCreateRequestDTO requestDto) {
+    public CommentResponseDTO createComment(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember,
+            CommentCreateRequestDTO requestDto) {
 
         Comments comment = new Comments(requestDto);
         comment.setMem_id(loginMember.getMem_id());
@@ -43,7 +43,8 @@ public class CommentService {
         return CommentResponseDTO.of(comment, loginMember.getMem_name());
     }
 
-    public List<CommentResponseDTO> getCommentsByTargetSeq(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember) {
+    public List<CommentResponseDTO> getCommentsByTargetSeq(TargetType targetType, Long targetSeq,
+            MemberInfoResponseDTO loginMember) {
         // 1. 특정 게시글의 모든 댓글을 DB에서 가져옵니다. (1번 쿼리)
         List<Comments> comments = commentMapper.findByTargetSeq(targetType, targetSeq);
 
@@ -99,7 +100,7 @@ public class CommentService {
         return responseDtos;
     }
 
-    public void updateComment(String currentUserId, Long commentSeq, CommentUpdateRequestDTO requestDto) throws AccessDeniedException {
+    public void updateComment(String currentUserId, Long commentSeq, CommentUpdateRequestDTO requestDto) {
         Comments comment = commentMapper.findBySeq(commentSeq);
         if (comment == null) {
             throw new RuntimeException("수정할 댓글이 존재하지 않습니다.");
@@ -113,7 +114,7 @@ public class CommentService {
         commentMapper.updateComment(comment);
     }
 
-    public void deleteComment(String currentUserId, Long commentId) throws AccessDeniedException {
+    public void deleteComment(String currentUserId, Long commentId) {
         Comments comment = commentMapper.findBySeq(commentId);
         if (comment == null) {
             return; // 이미 삭제되었거나 없는 경우, 그냥 성공으로 처리

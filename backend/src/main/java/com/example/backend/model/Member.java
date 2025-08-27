@@ -2,6 +2,9 @@ package com.example.backend.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.example.backend.dto.request.Member.MemberRegisterRequestDTO;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Member {
+public class Member{
 
   private String mem_id;
   private String mem_pw;

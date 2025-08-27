@@ -87,34 +87,15 @@ public class BoardService {
     }
 
     public BoardDetailResponseDTO getBoard(Long boardSeq, MemberInfoResponseDTO loginMember) {
-        Board board = boardMapper.findBoardBySeq(boardSeq);
-
-        if (board == null) {
-            throw new RuntimeException("게시글을 찾을수 없습니다");
-        }
-
         boardMapper.incrementViewCount(boardSeq);
-
+        
+        Board board = boardMapper.findBoardBySeq(boardSeq);
         BoardDetailResponseDTO responseDTO = BoardDetailResponseDTO.from(board);
 
-        boolean isEditable = false;
-        boolean isDeletable = false;
+        PermissionResult result = getCheckPermissions(board, loginMember);
 
-        if (loginMember != null) {
-            // 작성자 본인 확인
-            if (board.getMem_id().equals(loginMember.getMem_id())) {
-                isEditable = true;
-                isDeletable = true;
-            }
-
-            // 로그인멤버 권한 확인
-            if (loginMember.getMem_role() == MemberRole.ADMIN) {
-                isDeletable = true;
-            }
-        }
-
-        responseDTO.setEditable(isEditable);
-        responseDTO.setDeletable(isDeletable);
+        responseDTO.setEditable(result.isEditable);
+        responseDTO.setDeletable(result.isDeletable);
 
         return responseDTO;
     }
@@ -127,4 +108,53 @@ public class BoardService {
         return boardList;
     }
 
+
+    //#region 게시글 권한 확인
+    public record PermissionResult(boolean isEditable, boolean isDeletable) {
+    }
+
+    // 작성자 본인 확인 메서드
+    private PermissionResult checkPermission(Board board, MemberInfoResponseDTO loginMember) {
+
+        boolean isOwner = false;
+        boolean isAdmin = false;
+
+        if (loginMember != null) {
+            // 작성자 본인 확인
+            if (board.getMem_id().equals(loginMember.getMem_id())) {
+                isOwner = true;
+            }
+
+            // 로그인멤버 권한 확인
+            if (loginMember.getMem_role() == MemberRole.ADMIN) {
+                isAdmin = true;
+            }
+        }
+
+        boolean isEditable = isOwner;
+        boolean isDeletable = isAdmin || isOwner;
+
+        return new PermissionResult(isEditable, isDeletable);
+    }
+
+    public PermissionResult getCheckPermissions(Board board, MemberInfoResponseDTO loginMember) {
+        return checkPermission(board, loginMember);
+    }
+
+    public boolean isEditable(Long boardSeq, MemberInfoResponseDTO loginMember) {
+        Board board = boardMapper.findBoardBySeq(boardSeq);
+        if (board == null) {
+            throw new RuntimeException("게시글을 찾을수 없습니다");
+        }
+        return checkPermission(board, loginMember).isEditable;
+    }
+
+    public boolean isDeletable(Long boardSeq, MemberInfoResponseDTO loginMember) {
+        Board board = boardMapper.findBoardBySeq(boardSeq);
+        if (board == null) {
+            throw new RuntimeException("게시글을 찾을수 없습니다");
+        }
+        return checkPermission(board, loginMember).isDeletable;
+    }
+    //#endregion
 }
