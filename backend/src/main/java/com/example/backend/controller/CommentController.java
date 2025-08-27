@@ -52,6 +52,31 @@ public class CommentController {
     // #endregion
 
     // #region 여행지 정보 댓글 기능
+        // 특정 게시글의 댓글 목록 조회
+    @GetMapping("/category/{categorySeq}/comments")
+    public ResponseEntity<?> getCommentsForCategory(
+            @PathVariable Long categorySeq,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
+        List<CommentResponseDTO> comments = commentService.getCommentsByTargetSeq(TargetType.TRAVEL_INFO, categorySeq,
+                loginMember);
+        return ResponseEntity.ok(comments);
+    }
+
+    // 댓글 생성
+    @PostMapping("/category/{categorySeq}/comments")
+    public ResponseEntity<?> createCommentForCategory(
+            @PathVariable Long categorySeq,
+            @RequestBody CommentCreateRequestDTO requestDto,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
+        if (loginMember == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("댓글을 작성하려면 로그인이 필요합니다.");
+        }
+        CommentResponseDTO responseDTO = commentService.createComment(TargetType.TRAVEL_INFO, categorySeq, loginMember,
+                requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
     // #endregion
 
     // 댓글 수정

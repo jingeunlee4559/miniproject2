@@ -1,5 +1,6 @@
 package com.example.backend.dto.response;
 
+import java.sql.Clob;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import oracle.sql.CLOB;
 
 @Getter
 @Setter
@@ -49,8 +49,8 @@ public class CategoryDetailResponse {
             String jsonString = null;
             
             // Oracle CLOB 타입 처리
-            if (extraInfo instanceof oracle.sql.CLOB) {
-                oracle.sql.CLOB clob = (oracle.sql.CLOB) extraInfo;
+            if (extraInfo instanceof Clob) {
+                Clob clob = (Clob) extraInfo;
                 jsonString = clob.getSubString(1, (int) clob.length());
             } else if (extraInfo instanceof String) {
                 jsonString = (String) extraInfo;

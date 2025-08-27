@@ -19,6 +19,36 @@ function Categorydetail() {
     // 댓글 관련 상태 (추후 DB 연동 필요)
     const [comments, setComments] = useState([]);
 
+    const addComment = async (text) => {
+        try {
+            const newComment = {
+                comment_content: text
+            }
+            const response = await axios.post(`/api/category/${store_idx}/comments`, newComment);
+            setComments([response.data, ...comments]);
+        } catch (error){
+            console.error("댓글 등록 중 오류 발생:", error);
+        }
+    };
+
+         // 2. 댓글 목록 조회를 위한 새로운 useEffect를 추가합니다.
+     useEffect(() => {
+         // 댓글 데이터를 가져오는 비동기 함수를 선언합니다.
+         const fetchComments = async () => {
+             try {
+                 // board_seq를 이용해 해당 게시글의 댓글 목록을 요청합니다.
+                 const response = await axios.get(`/api/category/${store_idx}/comments`);
+                 // 서버로부터 받은 댓글 목록 데이터로 state를 업데이트합니다.
+                 setComments(response.data);
+             } catch (error) {
+                 console.error("댓글 목록을 가져오는 중 오류 발생:", error);
+             }
+         };
+         
+         fetchComments();
+     }, [store_idx]); // 3. 의존성 배열에 board_seq를 넣습니다.
+
+
     // 페이지가 로딩될 때 실행되는 로직
     useEffect(() => {
         const detailUrl = `http://localhost:8090/api/category/${store_idx}`;
@@ -145,7 +175,7 @@ function Categorydetail() {
                 </Row>
                 <Row>
                     <Col>
-                        <CommentForm />
+                        <CommentForm onSubmit={addComment} />
                     </Col>
                 </Row>
                 <Row>
