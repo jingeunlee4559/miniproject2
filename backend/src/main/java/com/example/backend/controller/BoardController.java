@@ -38,8 +38,7 @@ public class BoardController {
             @ModelAttribute BoardCreateRequestDTO requestDTO,
             @RequestParam(required = false) MultipartFile board_img,
             @AuthenticationPrincipal CustomUserDetails currentUser) throws IOException {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-        boardService.createBoard(requestDTO, board_img, loginMember.getMem_id());
+        boardService.createBoard(requestDTO, board_img, currentUser.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -47,10 +46,7 @@ public class BoardController {
     @GetMapping("/{boardSeq}")
     public ResponseEntity<?> getPost(@PathVariable Long boardSeq,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        // 게시글 상세 조회 로직
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-
-        return ResponseEntity.ok(boardService.getBoard(boardSeq, loginMember));
+        return ResponseEntity.ok(boardService.getBoard(boardSeq, currentUser));
     }
 
     // 게시글 삭제

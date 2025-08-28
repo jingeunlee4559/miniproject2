@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.Security.CustomUserDetails;
 import com.example.backend.dto.request.Comment.*;
 import com.example.backend.dto.response.CommentResponseDTO;
 import com.example.backend.dto.response.MemberInfoResponseDTO;
@@ -30,21 +31,21 @@ public class CommentService {
     @Autowired
     private MemberMapper memberMapper;
 
-    public CommentResponseDTO createComment(TargetType targetType, Long targetSeq, MemberInfoResponseDTO loginMember,
+    public CommentResponseDTO createComment(TargetType targetType, Long targetSeq, CustomUserDetails currentUser,
             CommentCreateRequestDTO requestDto) {
 
         Comments comment = new Comments(requestDto);
-        comment.setMem_id(loginMember.getMem_id());
+        comment.setMem_id(currentUser.getUsername());
         comment.setTarget_type(targetType);
         comment.setTarget_seq(targetSeq);
 
         commentMapper.createComment(comment);
         comment = commentMapper.findBySeq(comment.getComment_seq());
-        return CommentResponseDTO.of(comment, loginMember.getMem_name());
+        return CommentResponseDTO.of(comment, currentUser.getMember().getMem_name());
     }
 
     public List<CommentResponseDTO> getCommentsByTargetSeq(TargetType targetType, Long targetSeq,
-            MemberInfoResponseDTO loginMember) {
+            CustomUserDetails currentUser) {
         // 1. 특정 게시글의 모든 댓글을 DB에서 가져옵니다. (1번 쿼리)
         List<Comments> comments = commentMapper.findByTargetSeq(targetType, targetSeq);
 
@@ -80,12 +81,12 @@ public class CommentService {
             // 5-3. 권한을 계산하여 DTO에 설정합니다.
             boolean isEditable = false;
             boolean isDeletable = false;
-            if (loginMember != null) {
-                if (comment.getMem_id().equals(loginMember.getMem_id())) {
+            if (currentUser != null) {
+                if (comment.getMem_id().equals(currentUser.getUsername())) {
                     isEditable = true;
                     isDeletable = true;
                 }
-                if (loginMember.getMem_role() == MemberRole.ADMIN) {
+                if (currentUser.getMember().getMem_role() == MemberRole.ADMIN) {
                     isDeletable = true;
                 }
             }

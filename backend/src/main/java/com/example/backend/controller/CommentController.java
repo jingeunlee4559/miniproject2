@@ -29,9 +29,8 @@ public class CommentController {
     public ResponseEntity<?> getCommentsForBoard(
             @PathVariable Long boardSeq,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
         List<CommentResponseDTO> comments = commentService.getCommentsByTargetSeq(TargetType.BOARD, boardSeq,
-                loginMember);
+                currentUser);
         return ResponseEntity.ok(comments);
     }
 
@@ -41,11 +40,10 @@ public class CommentController {
             @PathVariable Long boardSeq,
             @RequestBody CommentCreateRequestDTO requestDto,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-        if (loginMember == null) {
+        if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("댓글을 작성하려면 로그인이 필요합니다.");
         }
-        CommentResponseDTO responseDTO = commentService.createComment(TargetType.BOARD, boardSeq, loginMember,
+        CommentResponseDTO responseDTO = commentService.createComment(TargetType.BOARD, boardSeq, currentUser,
                 requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -57,9 +55,8 @@ public class CommentController {
     public ResponseEntity<?> getCommentsForCategory(
             @PathVariable Long categorySeq,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
         List<CommentResponseDTO> comments = commentService.getCommentsByTargetSeq(TargetType.TRAVEL_INFO, categorySeq,
-                loginMember);
+                currentUser);
         return ResponseEntity.ok(comments);
     }
 
@@ -69,11 +66,10 @@ public class CommentController {
             @PathVariable Long categorySeq,
             @RequestBody CommentCreateRequestDTO requestDto,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-        if (loginMember == null) {
+        if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("댓글을 작성하려면 로그인이 필요합니다.");
         }
-        CommentResponseDTO responseDTO = commentService.createComment(TargetType.TRAVEL_INFO, categorySeq, loginMember,
+        CommentResponseDTO responseDTO = commentService.createComment(TargetType.TRAVEL_INFO, categorySeq, currentUser,
                 requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -94,11 +90,10 @@ public class CommentController {
     public ResponseEntity<?> deleteComment(
             @PathVariable Long commentSeq,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
-        MemberInfoResponseDTO loginMember = MemberInfoResponseDTO.from(currentUser.getMember());
-        if (loginMember == null) {
+        if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("댓글을 삭제하려면 로그인이 필요합니다.");
         }
-        commentService.deleteComment(loginMember.getMem_id(), commentSeq);
+        commentService.deleteComment(currentUser.getUsername(), commentSeq);
         return ResponseEntity.noContent().build(); // 성공 시 204 No Content
     }
 }

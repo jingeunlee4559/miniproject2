@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.backend.Security.CustomUserDetails;
 import com.example.backend.dto.request.Board.*;
 import com.example.backend.dto.response.*;
 import com.example.backend.mapper.BoardMapper;
 import com.example.backend.model.Board;
+import com.example.backend.model.Member;
 import com.example.backend.model.MemberRole;
 
 @Service
@@ -86,13 +88,19 @@ public class BoardService {
         boardMapper.deleteBoard(boardSeq);
     }
 
-    public BoardDetailResponseDTO getBoard(Long boardSeq, MemberInfoResponseDTO loginMember) {
+    public BoardDetailResponseDTO getBoard(Long boardSeq, CustomUserDetails currentUser) {
         boardMapper.incrementViewCount(boardSeq);
         
         Board board = boardMapper.findBoardBySeq(boardSeq);
         BoardDetailResponseDTO responseDTO = BoardDetailResponseDTO.from(board);
 
-        PermissionResult result = getCheckPermissions(board, loginMember);
+        if (currentUser == null) {
+            responseDTO.setEditable(false);
+            responseDTO.setDeletable(false);
+            return responseDTO;
+        }
+        
+        PermissionResult result = getCheckPermissions(board, currentUser.getMember());
 
         responseDTO.setEditable(result.isEditable);
         responseDTO.setDeletable(result.isDeletable);
@@ -114,7 +122,7 @@ public class BoardService {
     }
 
     // 작성자 본인 확인 메서드
-    private PermissionResult checkPermission(Board board, MemberInfoResponseDTO loginMember) {
+    private PermissionResult checkPermission(Board board, Member loginMember) {
 
         boolean isOwner = false;
         boolean isAdmin = false;
@@ -137,11 +145,11 @@ public class BoardService {
         return new PermissionResult(isEditable, isDeletable);
     }
 
-    public PermissionResult getCheckPermissions(Board board, MemberInfoResponseDTO loginMember) {
+    public PermissionResult getCheckPermissions(Board board, Member loginMember) {
         return checkPermission(board, loginMember);
     }
 
-    public boolean isEditable(Long boardSeq, MemberInfoResponseDTO loginMember) {
+    public boolean isEditable(Long boardSeq, Member loginMember) {
         Board board = boardMapper.findBoardBySeq(boardSeq);
         if (board == null) {
             throw new RuntimeException("게시글을 찾을수 없습니다");
@@ -149,7 +157,7 @@ public class BoardService {
         return checkPermission(board, loginMember).isEditable;
     }
 
-    public boolean isDeletable(Long boardSeq, MemberInfoResponseDTO loginMember) {
+    public boolean isDeletable(Long boardSeq, Member loginMember) {
         Board board = boardMapper.findBoardBySeq(boardSeq);
         if (board == null) {
             throw new RuntimeException("게시글을 찾을수 없습니다");
